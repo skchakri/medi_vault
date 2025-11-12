@@ -57,7 +57,7 @@ gem "pdf-reader", "~> 2.12"
 gem "phonelib", "~> 0.8"
 
 # Encryption
-gem "lockbox", "~> 1.3"
+gem "lockbox", "~> 2.1"
 
 # Monitoring (optional but recommended)
 gem "sentry-ruby", "~> 5.16", require: false
