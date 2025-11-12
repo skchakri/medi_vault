@@ -42,7 +42,7 @@ gem "ruby-openai", "~> 6.3"
 gem "rack-attack", "~> 6.7"
 
 # SMS
-gem "twilio-ruby", "~> 6.9"
+gem "twilio-ruby", "~> 7.8"
 
 # Pagination
 gem "kaminari", "~> 1.2"
