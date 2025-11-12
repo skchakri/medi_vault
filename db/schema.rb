@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_11_000009) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_12_194602) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -88,6 +88,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_11_000009) do
     t.index ["status"], name: "index_credentials_on_status"
     t.index ["user_id", "end_date"], name: "index_credentials_on_user_id_and_end_date"
     t.index ["user_id"], name: "index_credentials_on_user_id"
+  end
+
+  create_table "email_templates", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "template_type", null: false
+    t.string "subject", null: false
+    t.text "html_body", null: false
+    t.text "text_body"
+    t.json "variables", default: {}, null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_email_templates_on_name", unique: true
+    t.index ["template_type", "active"], name: "index_email_templates_on_template_type_and_active"
   end
 
   create_table "llm_requests", force: :cascade do |t|
@@ -177,10 +191,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_11_000009) do
     t.integer "credentials_count", default: 0, null: false
     t.datetime "trial_ends_at"
     t.datetime "subscription_ends_at"
+    t.string "provider"
+    t.string "uid"
+    t.string "oauth_token"
+    t.datetime "oauth_expires_at"
+    t.string "avatar_url"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["npi"], name: "index_users_on_npi"
     t.index ["plan"], name: "index_users_on_plan"
+    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
+    t.index ["provider"], name: "index_users_on_provider"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["role"], name: "index_users_on_role"
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
