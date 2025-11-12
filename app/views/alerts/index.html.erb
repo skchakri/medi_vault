@@ -1,0 +1,203 @@
+<% content_for :title, "Alerts - MediVault" %>
+
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="md:flex md:items-center md:justify-between">
+    <div class="flex-1 min-w-0">
+      <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+        Expiration Alerts
+      </h2>
+      <p class="mt-1 text-sm text-gray-500">
+        Manage alerts for your credential expirations
+      </p>
+    </div>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="bg-white shadow-md rounded-lg p-4">
+    <div class="flex items-center justify-between text-sm">
+      <div class="flex items-center space-x-6">
+        <div>
+          <span class="text-gray-500">Total Alerts:</span>
+          <span class="ml-1 font-semibold text-gray-900"><%= @alerts.total_count %></span>
+        </div>
+        <div class="hidden sm:block h-4 w-px bg-gray-300"></div>
+        <div class="hidden sm:block">
+          <span class="text-gray-500">Pending:</span>
+          <span class="ml-1 font-semibold text-blue-600"><%= current_user.alerts.pending.count %></span>
+        </div>
+        <div class="hidden sm:block">
+          <span class="text-gray-500">Sent:</span>
+          <span class="ml-1 font-semibold text-green-600"><%= current_user.alerts.sent.count %></span>
+        </div>
+        <div class="hidden sm:block">
+          <span class="text-gray-500">Failed:</span>
+          <span class="ml-1 font-semibold text-red-600"><%= current_user.alerts.failed.count %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alerts List -->
+  <div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <% if @alerts.any? %>
+      <!-- Desktop View -->
+      <div class="hidden md:block">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Credential
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Alert Date
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Days Before Expiry
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Status
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Message
+              </th>
+              <th scope="col" class="relative px-6 py-3">
+                <span class="sr-only">Actions</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @alerts.each do |alert| %>
+              <tr class="hover:bg-gray-50 transition">
+                <td class="px-6 py-4">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                      <svg class="h-6 w-6 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <div class="ml-4">
+                      <%= link_to alert.credential, class: "text-sm font-medium text-gray-900 hover:text-purple-600 transition" do %>
+                        <%= alert.credential.title %>
+                      <% end %>
+                      <div class="text-xs text-gray-500">
+                        Expires <%= alert.credential.end_date.strftime("%b %d, %Y") %>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900"><%= alert.alert_date.strftime("%b %d, %Y") %></div>
+                  <% if alert.alert_date < Date.today %>
+                    <div class="text-xs text-red-600">Past due</div>
+                  <% elsif alert.alert_date == Date.today %>
+                    <div class="text-xs text-yellow-600">Today</div>
+                  <% else %>
+                    <div class="text-xs text-gray-500"><%= (alert.alert_date - Date.today).to_i %> days away</div>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <%= alert.offset_days %> days
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <%= render 'shared/status_badge', status: alert.status %>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="text-sm text-gray-900 max-w-xs truncate">
+                    <%= alert.formatted_message %>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <%= button_to "Delete", alert_path(alert), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-900 transition" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile View -->
+      <div class="md:hidden divide-y divide-gray-200">
+        <% @alerts.each do |alert| %>
+          <div class="px-4 py-4">
+            <div class="flex items-start justify-between mb-3">
+              <div class="flex-1">
+                <div class="flex items-center mb-2">
+                  <div class="flex-shrink-0 h-10 w-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <svg class="h-6 w-6 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  <div class="ml-3 flex-1">
+                    <%= link_to alert.credential, class: "text-sm font-medium text-gray-900 hover:text-purple-600" do %>
+                      <%= alert.credential.title %>
+                    <% end %>
+                  </div>
+                </div>
+                <div class="ml-13 space-y-1">
+                  <div class="flex justify-between text-sm">
+                    <span class="text-gray-500">Alert Date:</span>
+                    <span class="text-gray-900"><%= alert.alert_date.strftime("%b %d, %Y") %></span>
+                  </div>
+                  <div class="flex justify-between text-sm">
+                    <span class="text-gray-500">Days Before:</span>
+                    <span class="text-gray-900"><%= alert.offset_days %> days</span>
+                  </div>
+                  <div class="flex justify-between text-sm">
+                    <span class="text-gray-500">Status:</span>
+                    <%= render 'shared/status_badge', status: alert.status %>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ml-13">
+              <p class="text-sm text-gray-700 mb-3"><%= alert.formatted_message %></p>
+              <%= button_to "Delete Alert", alert_path(alert), method: :delete, data: { confirm: "Are you sure?" }, class: "w-full inline-flex justify-center items-center px-4 py-2 border border-red-300 rounded-lg shadow-sm text-sm font-medium text-red-700 bg-white hover:bg-red-50 transition" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Pagination -->
+      <% if @alerts.total_pages > 1 %>
+        <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+          <div class="flex items-center justify-between">
+            <div class="flex-1 flex justify-between sm:hidden">
+              <% if @alerts.prev_page %>
+                <%= link_to "Previous", alerts_path(page: @alerts.prev_page), class: "relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+              <% end %>
+              <% if @alerts.next_page %>
+                <%= link_to "Next", alerts_path(page: @alerts.next_page), class: "ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+              <% end %>
+            </div>
+            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+              <div>
+                <p class="text-sm text-gray-700">
+                  Showing
+                  <span class="font-medium"><%= @alerts.offset + 1 %></span>
+                  to
+                  <span class="font-medium"><%= [@alerts.offset + @alerts.size, @alerts.total_count].min %></span>
+                  of
+                  <span class="font-medium"><%= @alerts.total_count %></span>
+                  results
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <!-- Empty State -->
+      <div class="text-center py-12 px-4">
+        <svg class="mx-auto h-16 w-16 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No alerts</h3>
+        <p class="mt-1 text-sm text-gray-500">Alerts will be automatically created when you add credentials with expiration dates.</p>
+        <div class="mt-6">
+          <%= link_to "View Credentials", credentials_path, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 transition" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

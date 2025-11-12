@@ -1,0 +1,209 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Page Header -->
+  <div class="bg-white border-b border-gray-200 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="text-3xl font-bold text-gray-900">Subscription & Billing</h1>
+      <p class="mt-2 text-gray-600">Manage your plan and billing preferences</p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Current Plan -->
+    <div class="bg-white rounded-lg shadow p-6 mb-8">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Current Plan</h2>
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-gray-600">You are currently on the</p>
+          <h3 class="text-2xl font-bold text-gray-900 capitalize"><%= @user.plan %> Plan</h3>
+          <p class="text-sm text-gray-500 mt-2">
+            <% if @user.plan_active %>
+              ✓ Active plan
+              <% if @user.subscription_ends_at.present? %>
+                - Renews on <%= @user.subscription_ends_at.strftime("%B %d, %Y") %>
+              <% end %>
+            <% else %>
+              Inactive - Click below to activate
+            <% end %>
+          </p>
+        </div>
+        <div class="text-right">
+          <% case @user.plan %>
+            <% when "pro" %>
+              <div class="text-3xl font-bold text-cyan-600">$29</div>
+            <% when "basic" %>
+              <div class="text-3xl font-bold text-cyan-600">$9</div>
+            <% else %>
+              <div class="text-3xl font-bold text-gray-600">Free</div>
+          <% end %>
+          <p class="text-sm text-gray-500 mt-1">per month</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plan Comparison -->
+    <div class="mb-8">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Choose Your Plan</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Free Plan -->
+        <div class="bg-white rounded-lg shadow overflow-hidden <%= 'ring-2 ring-cyan-500' if @user.plan == 'free' %>">
+          <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Free</h3>
+            <div class="text-3xl font-bold text-gray-900 mb-4">
+              $0
+              <span class="text-sm text-gray-600 font-normal">per month</span>
+            </div>
+            <p class="text-sm text-gray-600 mb-6">Perfect for getting started</p>
+
+            <ul class="space-y-3 mb-6">
+              <li class="flex items-center text-sm text-gray-700">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                <%= @plan_limits[:free][:credentials] %> Credentials
+              </li>
+              <li class="flex items-center text-sm text-gray-700">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                <%= @plan_limits[:free][:alerts_per_credential] %> Alert per Credential
+              </li>
+              <li class="flex items-center text-sm text-gray-500">
+                <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                Email Support
+              </li>
+            </ul>
+
+            <% if @user.plan != 'free' %>
+              <%= form_with(url: account_subscription_path, method: :patch, local: true) do |form| %>
+                <%= form.hidden_field :plan, value: 'free' %>
+                <%= form.submit "Switch to Free", class: "w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition cursor-pointer" %>
+              <% end %>
+            <% else %>
+              <button disabled class="w-full px-4 py-2 bg-cyan-600 text-white rounded-lg font-medium cursor-not-allowed">Current Plan</button>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Basic Plan -->
+        <div class="bg-white rounded-lg shadow overflow-hidden <%= 'ring-2 ring-cyan-500' if @user.plan == 'basic' %>">
+          <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Basic</h3>
+            <div class="text-3xl font-bold text-gray-900 mb-4">
+              $9
+              <span class="text-sm text-gray-600 font-normal">per month</span>
+            </div>
+            <p class="text-sm text-gray-600 mb-6">For growing practices</p>
+
+            <ul class="space-y-3 mb-6">
+              <li class="flex items-center text-sm text-gray-700">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                <%= @plan_limits[:basic][:credentials] %> Credentials
+              </li>
+              <li class="flex items-center text-sm text-gray-700">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                <%= @plan_limits[:basic][:alerts_per_credential] %> Alerts per Credential
+              </li>
+              <li class="flex items-center text-sm text-gray-500">
+                <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                SMS Notifications
+              </li>
+            </ul>
+
+            <% if @user.plan != 'basic' %>
+              <%= form_with(url: account_subscription_path, method: :patch, local: true) do |form| %>
+                <%= form.hidden_field :plan, value: 'basic' %>
+                <%= form.submit "Switch to Basic", class: "w-full px-4 py-2 bg-cyan-600 text-white rounded-lg font-medium hover:bg-cyan-700 transition cursor-pointer" %>
+              <% end %>
+            <% else %>
+              <button disabled class="w-full px-4 py-2 bg-cyan-600 text-white rounded-lg font-medium cursor-not-allowed">Current Plan</button>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Pro Plan -->
+        <div class="bg-white rounded-lg shadow overflow-hidden border-2 border-cyan-600 <%= 'ring-2 ring-cyan-500' if @user.plan == 'pro' %>">
+          <div class="bg-cyan-600 text-white px-6 py-3">
+            <p class="text-sm font-semibold">Most Popular</p>
+          </div>
+          <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Pro</h3>
+            <div class="text-3xl font-bold text-gray-900 mb-4">
+              $29
+              <span class="text-sm text-gray-600 font-normal">per month</span>
+            </div>
+            <p class="text-sm text-gray-600 mb-6">For advanced teams</p>
+
+            <ul class="space-y-3 mb-6">
+              <li class="flex items-center text-sm text-gray-700">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                Unlimited Credentials
+              </li>
+              <li class="flex items-center text-sm text-gray-700">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                Unlimited Alerts
+              </li>
+              <li class="flex items-center text-sm text-gray-700">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                SMS & Email Notifications
+              </li>
+            </ul>
+
+            <% if @user.plan != 'pro' %>
+              <%= form_with(url: account_subscription_path, method: :patch, local: true) do |form| %>
+                <%= form.hidden_field :plan, value: 'pro' %>
+                <%= form.submit "Switch to Pro", class: "w-full px-4 py-2 bg-cyan-600 text-white rounded-lg font-medium hover:bg-cyan-700 transition cursor-pointer" %>
+              <% end %>
+            <% else %>
+              <button disabled class="w-full px-4 py-2 bg-cyan-600 text-white rounded-lg font-medium cursor-not-allowed">Current Plan</button>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Billing Information -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Billing Information</h2>
+      <div class="border-t border-gray-200 pt-4">
+        <div class="flex justify-between items-center py-3 border-b border-gray-200">
+          <span class="text-gray-700">Billing Period</span>
+          <span class="font-medium text-gray-900">Monthly</span>
+        </div>
+        <div class="flex justify-between items-center py-3 border-b border-gray-200">
+          <span class="text-gray-700">Next Billing Date</span>
+          <span class="font-medium text-gray-900">
+            <% if @user.subscription_ends_at.present? %>
+              <%= @user.subscription_ends_at.strftime("%B %d, %Y") %>
+            <% else %>
+              Not Set
+            <% end %>
+          </span>
+        </div>
+        <div class="flex justify-between items-center py-3">
+          <span class="text-gray-700">Payment Method</span>
+          <span class="text-gray-500 text-sm">Stripe (Coming Soon)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex justify-end gap-4 mt-8">
+      <%= link_to "← Back to Profile", account_profile_path, class: "px-6 py-2.5 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition" %>
+    </div>
+  </div>
+</div>

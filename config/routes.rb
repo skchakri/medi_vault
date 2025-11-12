@@ -1,0 +1,83 @@
+Rails.application.routes.draw do
+  # Devise routes
+  devise_for :users
+
+  # Health check
+  get "up" => "rails/health#show", as: :rails_health_check
+
+  # PWA files
+  get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+  get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
+
+  # Root routes
+  authenticated :user do
+    root "dashboards#show", as: :authenticated_root
+  end
+  root "pages#home"
+
+  # Marketing/Static pages
+  get "pricing", to: "pages#pricing"
+  get "about", to: "pages#about"
+  get "contact", to: "pages#contact"
+
+  # Authenticated user routes
+  authenticate :user do
+    resource :dashboard, only: [:show]
+
+    resources :credentials do
+      member do
+        post :extract # Re-trigger AI extraction
+        get :download
+      end
+      resources :alerts, only: [:create, :destroy], shallow: true
+      resources :share_links, only: [:create], shallow: true
+    end
+
+    resources :alerts, only: [:index]
+    resources :notifications, only: [:index, :show]
+
+    # Account settings
+    namespace :account do
+      resource :profile, only: [:show, :update] do
+        post :verify_npi, on: :collection
+      end
+      resource :subscription, only: [:show, :update]
+    end
+  end
+
+  # Public share link access
+  get "share/:token", to: "share_links#show", as: :share
+
+  # Admin routes
+  namespace :admin do
+    root "dashboard#index"
+
+    resources :users do
+      member do
+        patch :toggle_admin
+      end
+    end
+
+    resources :credentials, only: [:index, :show, :destroy]
+    resources :api_settings
+    resources :llm_requests, only: [:index, :show]
+
+    get "reports", to: "reports#index"
+    get "reports/users", to: "reports#users"
+    get "reports/credentials", to: "reports#credentials"
+    get "reports/llm_usage", to: "reports#llm_usage"
+  end
+
+  # Sidekiq Web UI (admin only)
+  require 'sidekiq/web'
+  authenticate :user, ->(user) { user.admin? } do
+    mount Sidekiq::Web => '/admin/sidekiq'
+  end
+
+  # Email preview in development
+  if Rails.env.development?
+    if defined?(LetterOpenerWeb)
+      mount LetterOpenerWeb::Engine, at: "/letter_opener"
+    end
+  end
+end

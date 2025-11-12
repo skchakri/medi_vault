@@ -1,0 +1,23 @@
+⏰ CREDENTIAL EXPIRATION ALERT
+================================
+
+Hello <%= @user.first_name %>,
+
+<%= @alert.formatted_message %>
+
+CREDENTIAL DETAILS:
+-------------------
+Title: <%= @credential.title %>
+Expiration Date: <%= @credential.displayable_end_date %>
+<% if @days_until_expiration %>Days Until Expiration: <%= @days_until_expiration %> days<% end %>
+<% if @credential.source_filename %>File: <%= @credential.source_filename %><% end %>
+
+Please take action to renew this credential before it expires.
+
+View Credential: <%= credential_url(@credential) %>
+
+Need help? Visit your dashboard to manage all your credentials and alert settings.
+
+---
+This is an automated reminder from MediVault
+To manage your notification preferences, visit your account settings.

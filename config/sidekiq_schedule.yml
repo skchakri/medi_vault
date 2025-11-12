@@ -1,0 +1,19 @@
+# Sidekiq-Cron schedule configuration
+
+alert_check:
+  cron: "0 * * * *"  # Every hour
+  class: "AlertCheckJob"
+  queue: alerts
+  description: "Check for alerts that are due and dispatch notifications"
+
+credential_status_update:
+  cron: "0 0 * * *"  # Daily at midnight
+  class: "CredentialStatusUpdateJob"
+  queue: default
+  description: "Update credential statuses based on expiration dates"
+
+share_link_cleanup:
+  cron: "0 2 * * *"  # Daily at 2 AM
+  class: "ShareLinkCleanupJob"
+  queue: default
+  description: "Clean up expired share links"

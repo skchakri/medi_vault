@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px 20px; text-align: center; border-radius: 8px 8px 0 0; }
+    .header h1 { margin: 0; font-size: 28px; }
+    .header p { margin: 5px 0 0 0; opacity: 0.9; }
+    .content { background: #f9f9f9; padding: 30px 20px; border-left: 1px solid #e0e0e0; border-right: 1px solid #e0e0e0; }
+    .content h2 { color: #667eea; font-size: 22px; margin-top: 0; }
+    .content p { margin: 15px 0; }
+    .feature-list { list-style: none; padding: 0; margin: 20px 0; }
+    .feature-list li { padding: 10px 0; border-bottom: 1px solid #e0e0e0; }
+    .feature-list li:before { content: "✓ "; color: #667eea; font-weight: bold; margin-right: 10px; }
+    .cta-button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; }
+    .footer { background: #f0f0f0; padding: 20px; text-align: center; border-radius: 0 0 8px 8px; font-size: 12px; color: #666; border-top: 1px solid #e0e0e0; }
+    .footer a { color: #667eea; text-decoration: none; }
+    .divider { height: 1px; background: #e0e0e0; margin: 20px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Welcome to MediVault!</h1>
+      <p>Secure Credential Management for Healthcare Professionals</p>
+    </div>
+
+    <div class="content">
+      <h2>Hi <%= @user.first_name %>,</h2>
+
+      <p>Thank you for joining MediVault! We're excited to have you on board. Your account has been successfully created and you're ready to start managing your professional credentials securely.</p>
+
+      <h3>What You Can Do with MediVault:</h3>
+      <ul class="feature-list">
+        <li>Upload and organize your professional credentials and certifications</li>
+        <li>Get automatic expiration alerts before your credentials expire</li>
+        <li>Track all your important dates and licenses in one secure place</li>
+        <li>Share credentials securely with colleagues or employers</li>
+        <li>AI-powered credential extraction from documents</li>
+      </ul>
+
+      <p><strong>Getting Started:</strong></p>
+      <ol style="margin: 15px 0;">
+        <li>Complete your profile with your professional information</li>
+        <li>Upload your first credential (medical license, certification, etc.)</li>
+        <li>Set up expiration alerts for your important dates</li>
+        <li>Choose your subscription plan to unlock all features</li>
+      </ol>
+
+      <p style="text-align: center;">
+        <a href="<%= authenticated_root_url %>" class="cta-button">Get Started Now</a>
+      </p>
+
+      <div class="divider"></div>
+
+      <h3>Your Account Details:</h3>
+      <p>
+        <strong>Email:</strong> <%= @user.email %><br>
+        <strong>Account Created:</strong> <%= @user.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+      </p>
+
+      <p>If you have any questions or need help getting started, please don't hesitate to reach out to our support team.</p>
+    </div>
+
+    <div class="footer">
+      <p>© 2025 MediVault. All rights reserved.</p>
+      <p>
+        <a href="<%= root_url %>">Visit MediVault</a> |
+        <a href="<%= about_url %>">About Us</a> |
+        <a href="<%= contact_url %>">Contact Support</a>
+      </p>
+      <p style="margin-top: 15px; font-size: 11px;">
+        You received this email because you signed up for a MediVault account.
+        If you did not create this account, please contact us immediately.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

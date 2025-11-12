@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+    .content { background: #f7fafc; padding: 30px; border-radius: 0 0 8px 8px; }
+    .credential-info { background: white; padding: 20px; border-left: 4px solid #667eea; margin: 20px 0; border-radius: 4px; }
+    .button { display: inline-block; background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; margin: 20px 0; }
+    .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #718096; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 style="margin: 0;">⏰ Credential Expiration Alert</h1>
+    </div>
+
+    <div class="content">
+      <p>Hello <%= @user.first_name %>,</p>
+
+      <p><strong><%= @alert.formatted_message %></strong></p>
+
+      <div class="credential-info">
+        <h3 style="margin-top: 0; color: #667eea;">Credential Details</h3>
+        <p><strong>Title:</strong> <%= @credential.title %></p>
+        <p><strong>Expiration Date:</strong> <%= @credential.displayable_end_date %></p>
+        <% if @days_until_expiration %>
+          <p><strong>Days Until Expiration:</strong> <%= @days_until_expiration %> days</p>
+        <% end %>
+        <% if @credential.source_filename %>
+          <p><strong>File:</strong> <%= @credential.source_filename %></p>
+        <% end %>
+      </div>
+
+      <p>Please take action to renew this credential before it expires.</p>
+
+      <center>
+        <a href="<%= credential_url(@credential) %>" class="button">View Credential</a>
+      </center>
+
+      <p style="margin-top: 30px;">Need help? Visit your dashboard to manage all your credentials and alert settings.</p>
+    </div>
+
+    <div class="footer">
+      <p>This is an automated reminder from <strong>MediVault</strong></p>
+      <p>To manage your notification preferences, visit your account settings.</p>
+    </div>
+  </div>
+</body>
+</html>

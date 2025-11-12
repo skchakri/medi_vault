@@ -1,0 +1,34 @@
+Welcome to MediVault!
+===============================================
+
+Hi <%= @user.first_name %>,
+
+Thank you for joining MediVault! We're excited to have you on board. Your account has been successfully created and you're ready to start managing your professional credentials securely.
+
+WHAT YOU CAN DO WITH MEDIVAULT:
+- Upload and organize your professional credentials and certifications
+- Get automatic expiration alerts before your credentials expire
+- Track all your important dates and licenses in one secure place
+- Share credentials securely with colleagues or employers
+- AI-powered credential extraction from documents
+
+GETTING STARTED:
+1. Complete your profile with your professional information
+2. Upload your first credential (medical license, certification, etc.)
+3. Set up expiration alerts for your important dates
+4. Choose your subscription plan to unlock all features
+
+YOUR ACCOUNT DETAILS:
+Email: <%= @user.email %>
+Account Created: <%= @user.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+
+If you have any questions or need help getting started, please don't hesitate to reach out to our support team.
+
+Visit us at: <%= root_url %>
+Contact Support: <%= contact_url %>
+
+© 2025 MediVault. All rights reserved.
+
+---
+You received this email because you signed up for a MediVault account.
+If you did not create this account, please contact us immediately.

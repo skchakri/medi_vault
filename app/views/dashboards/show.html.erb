@@ -1,0 +1,237 @@
+<% content_for :title, "Dashboard - MediVault" %>
+
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="md:flex md:items-center md:justify-between">
+    <div class="flex-1 min-w-0">
+      <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+        Welcome back, <%= current_user.first_name %>!
+      </h2>
+      <p class="mt-1 text-sm text-gray-500">
+        Here's an overview of your credentials and alerts
+      </p>
+    </div>
+    <div class="mt-4 flex md:mt-0 md:ml-4">
+      <%= link_to "Add Credential", new_credential_path, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition" %>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <!-- Total Credentials -->
+    <div class="bg-white overflow-hidden shadow-md rounded-lg hover:shadow-lg transition">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="flex items-center justify-center h-12 w-12 rounded-md bg-purple-500 text-white">
+              <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">
+                Total Credentials
+              </dt>
+              <dd class="flex items-baseline">
+                <div class="text-2xl font-semibold text-gray-900">
+                  <%= @total_credentials %>
+                </div>
+                <div class="ml-2 text-sm text-gray-500">
+                  / <%= current_user.max_credentials %>
+                </div>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Expiring Soon -->
+    <div class="bg-white overflow-hidden shadow-md rounded-lg hover:shadow-lg transition">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="flex items-center justify-center h-12 w-12 rounded-md bg-yellow-500 text-white">
+              <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">
+                Expiring Soon
+              </dt>
+              <dd class="flex items-baseline">
+                <div class="text-2xl font-semibold text-yellow-600">
+                  <%= @expiring_soon_count %>
+                </div>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <% if @expiring_soon_count > 0 %>
+        <div class="bg-yellow-50 px-5 py-3">
+          <div class="text-sm">
+            <%= link_to "View all", credentials_path, class: "font-medium text-yellow-700 hover:text-yellow-900 transition" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Expired -->
+    <div class="bg-white overflow-hidden shadow-md rounded-lg hover:shadow-lg transition">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="flex items-center justify-center h-12 w-12 rounded-md bg-red-500 text-white">
+              <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">
+                Expired
+              </dt>
+              <dd class="flex items-baseline">
+                <div class="text-2xl font-semibold text-red-600">
+                  <%= @expired_count %>
+                </div>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <% if @expired_count > 0 %>
+        <div class="bg-red-50 px-5 py-3">
+          <div class="text-sm">
+            <%= link_to "Renew now", credentials_path, class: "font-medium text-red-700 hover:text-red-900 transition" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Plan Status -->
+    <div class="bg-white overflow-hidden shadow-md rounded-lg hover:shadow-lg transition">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="flex items-center justify-center h-12 w-12 rounded-md <%= current_user.pro? ? 'bg-gradient-to-r from-purple-600 to-blue-600' : 'bg-blue-500' %> text-white">
+              <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+              </svg>
+            </div>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">
+                Current Plan
+              </dt>
+              <dd class="flex items-baseline">
+                <div class="text-2xl font-semibold <%= current_user.pro? ? 'text-purple-600' : 'text-gray-900' %>">
+                  <%= current_plan_name %>
+                </div>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-5 py-3">
+        <div class="text-sm">
+          <%= link_to "Manage subscription", account_subscription_path, class: "font-medium text-purple-700 hover:text-purple-900 transition" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Two Column Layout -->
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <!-- Recent Credentials -->
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">Recent Credentials</h3>
+      </div>
+      <div class="divide-y divide-gray-200">
+        <% if @credentials.any? %>
+          <% @credentials.each do |credential| %>
+            <div class="px-6 py-4 hover:bg-gray-50 transition">
+              <div class="flex items-center justify-between">
+                <div class="flex-1 min-w-0">
+                  <%= link_to credential, class: "block focus:outline-none" do %>
+                    <p class="text-sm font-medium text-gray-900 truncate">
+                      <%= credential.title %>
+                    </p>
+                    <p class="text-sm text-gray-500">
+                      Expires: <%= credential.end_date.strftime("%B %d, %Y") %>
+                    </p>
+                  <% end %>
+                </div>
+                <div class="ml-4 flex-shrink-0">
+                  <%= render 'shared/status_badge', status: credential.status %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+          <div class="px-6 py-4 bg-gray-50">
+            <%= link_to "View all credentials →", credentials_path, class: "text-sm font-medium text-purple-600 hover:text-purple-900 transition" %>
+          </div>
+        <% else %>
+          <div class="px-6 py-12 text-center">
+            <svg class="mx-auto h-12 w-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No credentials</h3>
+            <p class="mt-1 text-sm text-gray-500">Get started by uploading your first credential.</p>
+            <div class="mt-6">
+              <%= link_to "Add Credential", new_credential_path, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 transition" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Upcoming Alerts -->
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">Upcoming Alerts</h3>
+      </div>
+      <div class="divide-y divide-gray-200">
+        <% if @upcoming_alerts.any? %>
+          <% @upcoming_alerts.each do |alert| %>
+            <div class="px-6 py-4 hover:bg-gray-50 transition">
+              <div class="flex items-center justify-between">
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-900 truncate">
+                    <%= alert.credential.title %>
+                  </p>
+                  <p class="text-sm text-gray-500">
+                    Alert on <%= alert.alert_date.strftime("%B %d, %Y") %> (<%= alert.offset_days %> days before expiry)
+                  </p>
+                </div>
+                <div class="ml-4 flex-shrink-0">
+                  <%= render 'shared/status_badge', status: alert.status %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+          <div class="px-6 py-4 bg-gray-50">
+            <%= link_to "View all alerts →", alerts_path, class: "text-sm font-medium text-purple-600 hover:text-purple-900 transition" %>
+          </div>
+        <% else %>
+          <div class="px-6 py-12 text-center">
+            <svg class="mx-auto h-12 w-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No upcoming alerts</h3>
+            <p class="mt-1 text-sm text-gray-500">Alerts will appear here when your credentials are approaching expiration.</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
