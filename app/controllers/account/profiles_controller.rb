@@ -9,7 +9,14 @@ module Account
     def update
       @user = current_user
 
-      if @user.update_without_password(profile_params)
+      # Use update_without_password for Devise to skip password validation
+      successfully_updated = if needs_password?(@user, profile_params)
+        @user.update(profile_params)
+      else
+        @user.update_without_password(profile_params)
+      end
+
+      if successfully_updated
         flash[:notice] = "Profile updated successfully"
         redirect_to account_profile_path
       else
@@ -33,6 +40,11 @@ module Account
 
     def profile_params
       params.require(:user).permit(:first_name, :last_name, :phone, :npi, :notification_email, :notification_sms, :avatar)
+    end
+
+    # Check if we need to validate password (if user is trying to change password)
+    def needs_password?(user, params)
+      params[:password].present? || params[:password_confirmation].present?
     end
   end
 end

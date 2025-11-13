@@ -144,6 +144,10 @@ class User < ApplicationRecord
   end
 
   def password_required?
-    !oauth_user?
+    # Skip password validation if we're updating without password
+    return false if @updating_password == false
+
+    # For new records, require password unless OAuth user
+    new_record? && !oauth_user?
   end
 end
