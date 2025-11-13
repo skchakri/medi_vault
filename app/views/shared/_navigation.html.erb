@@ -14,14 +14,22 @@
 
         <!-- Primary Navigation -->
         <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
-          <%= link_to "Dashboard", authenticated_root_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(authenticated_root_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
-
-          <%= link_to "Credentials", credentials_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(credentials_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
-
-          <%= link_to "Alerts", alerts_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(alerts_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
-
           <% if current_user.admin? %>
-            <%= link_to "Admin", admin_root_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(admin_root_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
+            <%= link_to "Dashboard", admin_root_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(admin_root_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
+
+            <%= link_to "Users", admin_users_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(admin_users_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
+
+            <%= link_to "Alert Configuration", admin_alert_types_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(admin_alert_types_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
+
+            <%= link_to "Email Templates", admin_email_templates_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(admin_email_templates_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
+
+            <%= link_to "Settings", admin_settings_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(admin_settings_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
+          <% else %>
+            <%= link_to "Dashboard", authenticated_root_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(authenticated_root_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
+
+            <%= link_to "Credentials", credentials_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(credentials_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
+
+            <%= link_to "Alerts", alerts_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(alerts_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
           <% end %>
         </div>
       </div>
@@ -83,14 +91,22 @@
     <!-- Mobile menu -->
     <div class="hidden" data-mobile-menu-target="menu">
       <div class="pt-2 pb-3 space-y-1">
-        <%= link_to "Dashboard", authenticated_root_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(authenticated_root_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
-
-        <%= link_to "Credentials", credentials_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(credentials_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
-
-        <%= link_to "Alerts", alerts_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(alerts_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
-
         <% if current_user.admin? %>
-          <%= link_to "Admin", admin_root_path, class: "block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent" %>
+          <%= link_to "Dashboard", admin_root_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(admin_root_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
+
+          <%= link_to "Users", admin_users_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(admin_users_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
+
+          <%= link_to "Alert Configuration", admin_alert_types_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(admin_alert_types_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
+
+          <%= link_to "Email Templates", admin_email_templates_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(admin_email_templates_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
+
+          <%= link_to "Settings", admin_settings_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(admin_settings_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
+        <% else %>
+          <%= link_to "Dashboard", authenticated_root_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(authenticated_root_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
+
+          <%= link_to "Credentials", credentials_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(credentials_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
+
+          <%= link_to "Alerts", alerts_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(alerts_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
         <% end %>
       </div>
     </div>
