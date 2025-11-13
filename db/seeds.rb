@@ -233,6 +233,50 @@ pro_user.notifications.create!(
 
 puts "✅ Created #{Notification.count} notifications"
 
+# Create Alert Types
+puts "\n🚨 Creating alert types..."
+
+AlertType.create!([
+  {
+    name: '90 Days Before Expiration',
+    offset_days: 90,
+    description: 'Alert when a credential expires in 90 days',
+    priority: 1,
+    notification_channels: ['email'],
+    user_plans: ['free', 'basic', 'pro'],
+    active: true
+  },
+  {
+    name: '30 Days Before Expiration',
+    offset_days: 30,
+    description: 'Alert when a credential expires in 30 days',
+    priority: 2,
+    notification_channels: ['email', 'sms'],
+    user_plans: ['free', 'basic', 'pro'],
+    active: true
+  },
+  {
+    name: '7 Days Before Expiration',
+    offset_days: 7,
+    description: 'Urgent alert when a credential expires in 7 days',
+    priority: 3,
+    notification_channels: ['email', 'sms'],
+    user_plans: ['basic', 'pro'],
+    active: true
+  },
+  {
+    name: '1 Day Before Expiration',
+    offset_days: 1,
+    description: 'Critical alert - credential expires tomorrow',
+    priority: 4,
+    notification_channels: ['email', 'sms'],
+    user_plans: ['pro'],
+    active: true
+  }
+])
+
+puts "✅ Created #{AlertType.count} alert types"
+
 # Create API Settings
 puts "\n⚙️  Creating API settings..."
 
@@ -316,6 +360,7 @@ puts "    - Admin: #{User.admin.count}"
 puts "    - Regular: #{User.user.count}"
 puts "  • Credentials: #{Credential.count}"
 puts "  • Alerts: #{Alert.count}"
+puts "  • Alert Types: #{AlertType.count}"
 puts "  • Notifications: #{Notification.count}"
 puts "  • API Settings: #{ApiSetting.count}"
 puts "  • LLM Requests: #{LlmRequest.count}"
