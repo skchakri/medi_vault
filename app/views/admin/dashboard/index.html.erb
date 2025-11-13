@@ -219,7 +219,7 @@
             <% @recent_credentials.each do |credential| %>
               <tr class="hover:bg-gray-50">
                 <td class="px-6 py-3 text-sm font-medium text-gray-900">
-                  <%= link_to credential.title, admin_credential_path(credential), class: "text-blue-600 hover:text-blue-900" %>
+                  <%= credential.title %>
                 </td>
                 <td class="px-6 py-3 text-sm text-gray-600">
                   <%= link_to credential.user.full_name, admin_user_path(credential.user), class: "text-blue-600 hover:text-blue-900" %>
@@ -254,12 +254,11 @@
       </div>
     </div>
 
-    <!-- Quick Links -->
-    <div class="mt-8 flex justify-start gap-4">
+    <!-- Admin Navigation -->
+    <div class="mt-8 flex justify-start gap-4 flex-wrap">
       <%= link_to "Manage Users", admin_users_path, class: "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition" %>
-      <%= link_to "View Credentials", admin_credentials_path, class: "px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition" %>
-      <%= link_to "LLM Requests", admin_llm_requests_path, class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition" %>
-      <%= link_to "Reports", admin_reports_path, class: "px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition" %>
+      <%= link_to "Alert Configuration", admin_alert_types_path, class: "px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition" %>
+      <%= link_to "Settings", admin_settings_path, class: "px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition" %>
     </div>
   </div>
 </div>

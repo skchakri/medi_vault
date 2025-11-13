@@ -55,13 +55,14 @@ Rails.application.routes.draw do
     resources :users do
       member do
         patch :toggle_admin
+        post :send_password_reset
       end
     end
 
-    resources :credentials, only: [:index, :show, :destroy]
-    resources :api_settings
-    resources :llm_requests, only: [:index, :show]
+    resources :alert_types
+    resource :settings, only: [:show, :update]
     resources :email_templates
+    resources :llm_requests, only: [:index, :show]
 
     get "reports", to: "reports#index"
     get "reports/users", to: "reports#users"

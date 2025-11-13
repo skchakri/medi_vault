@@ -87,22 +87,20 @@ class Credential < ApplicationRecord
   def create_default_alerts
     return unless end_date.present?
 
-    # Create default alerts based on user plan
-    default_days = case user.plan
-                   when "free" then [30]
-                   when "basic" then [30, 7, 1]
-                   when "pro" then [90, 30, 7, 1]
-                   else []
-                   end
+    # Get active alert types applicable to user's plan
+    applicable_alert_types = AlertType.active
+      .where("user_plans IS NULL OR user_plans @> ?", [user.plan].to_json)
+      .order(priority: :asc)
 
-    default_days.each do |days|
-      alert_date = end_date - days.days
+    applicable_alert_types.each do |alert_type|
+      alert_date = end_date - alert_type.offset_days.days
       next if alert_date < Date.today
 
       alerts.create!(
-        offset_days: days,
+        alert_type: alert_type,
+        offset_days: alert_type.offset_days,
         alert_date: alert_date,
-        message: "Your #{title} expires in #{days} days"
+        message: "Your #{title} expires in #{alert_type.offset_days} days"
       )
     end
   end

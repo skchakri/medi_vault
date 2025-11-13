@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_12_194602) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_13_000002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,6 +42,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_12_194602) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "alert_types", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "offset_days", null: false
+    t.text "description"
+    t.boolean "active", default: true, null: false
+    t.jsonb "notification_channels", default: ["email"], null: false
+    t.integer "priority", default: 0, null: false
+    t.jsonb "user_plans", default: ["free", "basic", "pro"], null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_alert_types_on_active"
+    t.index ["name"], name: "index_alert_types_on_name", unique: true
+    t.index ["priority"], name: "index_alert_types_on_priority"
+  end
+
   create_table "alerts", force: :cascade do |t|
     t.bigint "credential_id", null: false
     t.integer "offset_days", null: false
@@ -51,7 +66,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_12_194602) do
     t.text "message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "alert_type_id"
     t.index ["alert_date"], name: "index_alerts_on_alert_date"
+    t.index ["alert_type_id", "credential_id"], name: "index_alerts_on_alert_type_id_and_credential_id"
+    t.index ["alert_type_id"], name: "index_alerts_on_alert_type_id"
     t.index ["credential_id", "offset_days"], name: "index_alerts_on_credential_id_and_offset_days", unique: true
     t.index ["credential_id"], name: "index_alerts_on_credential_id"
     t.index ["status"], name: "index_alerts_on_status"
@@ -209,6 +227,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_12_194602) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "alerts", "alert_types"
   add_foreign_key "alerts", "credentials"
   add_foreign_key "credentials", "users"
   add_foreign_key "llm_requests", "users"

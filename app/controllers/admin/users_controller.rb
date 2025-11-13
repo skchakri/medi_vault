@@ -21,6 +21,13 @@ module Admin
       redirect_to admin_users_path
     end
 
+    def send_password_reset
+      @user = User.find(params[:id])
+      @user.send_reset_password_instructions
+      flash[:notice] = "Password reset email sent to #{@user.email}"
+      redirect_to admin_reports_users_path
+    end
+
     def destroy
       @user = User.find(params[:id])
 

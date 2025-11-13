@@ -2,6 +2,7 @@
 
 class Alert < ApplicationRecord
   belongs_to :credential
+  belongs_to :alert_type, optional: true
   has_one :user, through: :credential
 
   enum :status, { pending: 0, sent: 1, failed: 2, cancelled: 3 }
