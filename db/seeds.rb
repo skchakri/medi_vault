@@ -302,6 +302,10 @@ end
 
 puts "✅ Created #{LlmRequest.count} LLM requests"
 
+# Load email templates seeder
+puts "\n📧 Creating email templates..."
+load(Rails.root.join('db/seeds/email_templates.rb'))
+
 # Summary
 puts "\n" + "=" * 60
 puts "🎉 SEEDING COMPLETE!"

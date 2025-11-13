@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   # Devise routes
-  devise_for :users
+  devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
 
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check
@@ -61,6 +61,7 @@ Rails.application.routes.draw do
     resources :credentials, only: [:index, :show, :destroy]
     resources :api_settings
     resources :llm_requests, only: [:index, :show]
+    resources :email_templates
 
     get "reports", to: "reports#index"
     get "reports/users", to: "reports#users"

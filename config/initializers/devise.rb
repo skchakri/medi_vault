@@ -2,6 +2,7 @@
 
 Devise.setup do |config|
   config.mailer_sender = ENV.fetch('MAILER_FROM', 'noreply@medivault.com')
+  config.mailer = "DeviseMailer"
 
   require 'devise/orm/active_record'
 
@@ -26,4 +27,11 @@ Devise.setup do |config|
 
   config.responder.error_status = :unprocessable_entity
   config.responder.redirect_status = :see_other
+
+  # OmniAuth configuration
+  config.omniauth :google_oauth2,
+    ENV["GOOGLE_CLIENT_ID"],
+    ENV["GOOGLE_CLIENT_SECRET"],
+    scope: ["userinfo:email", "userinfo:profile"],
+    prompt: "consent"
 end
