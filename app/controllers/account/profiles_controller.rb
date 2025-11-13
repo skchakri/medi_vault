@@ -9,7 +9,7 @@ module Account
     def update
       @user = current_user
 
-      if @user.update(profile_params)
+      if @user.update_without_password(profile_params)
         flash[:notice] = "Profile updated successfully"
         redirect_to account_profile_path
       else
