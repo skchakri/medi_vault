@@ -4,7 +4,15 @@ class CredentialsController < ApplicationController
   before_action :set_credential, only: [:show, :edit, :update, :destroy, :download, :extract]
 
   def index
-    @credentials = current_user.credentials.order(end_date: :asc).page(params[:page]).per(20)
+    @credentials = current_user.credentials
+
+    # Apply search filter if search parameter is present
+    if params[:search].present?
+      search_term = "%#{params[:search]}%"
+      @credentials = @credentials.where("title ILIKE ? OR notes ILIKE ?", search_term, search_term)
+    end
+
+    @credentials = @credentials.order(end_date: :asc).page(params[:page]).per(20)
   end
 
   def show
