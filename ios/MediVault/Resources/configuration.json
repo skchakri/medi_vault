@@ -1,0 +1,37 @@
+{
+  "settings": {
+    "screenshots_enabled": true
+  },
+  "rules": [
+    {
+      "patterns": [
+        "/new$",
+        "/edit$"
+      ],
+      "properties": {
+        "context": "modal",
+        "pull_to_refresh_enabled": false
+      }
+    },
+    {
+      "patterns": [
+        "/users/sign_in$",
+        "/users/sign_up$",
+        "/users/password"
+      ],
+      "properties": {
+        "context": "modal",
+        "pull_to_refresh_enabled": false
+      }
+    },
+    {
+      "patterns": [
+        ".*"
+      ],
+      "properties": {
+        "context": "default",
+        "pull_to_refresh_enabled": true
+      }
+    }
+  ]
+}

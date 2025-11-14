@@ -1,5 +1,4 @@
 import { Controller } from "@hotwired/stimulus"
-import TomSelect from "tom-select"
 
 // Connects to data-controller="tag-select"
 export default class extends Controller {
@@ -13,6 +12,12 @@ export default class extends Controller {
   }
 
   initializeSelect() {
+    // TomSelect is loaded from CDN and available as a global
+    if (typeof TomSelect === 'undefined') {
+      console.error('TomSelect is not loaded. Make sure the CDN script is included.')
+      return
+    }
+
     const options = {
       plugins: {
         remove_button: {

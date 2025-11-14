@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/webFragment">
+
+    <fragment
+        android:id="@+id/webFragment"
+        android:name="com.medivault.app.features.web.WebFragment"
+        android:label="MediVault" />
+
+    <dialog
+        android:id="@+id/webModalFragment"
+        android:name="com.medivault.app.features.web.WebModalFragment"
+        android:label="MediVault Modal" />
+
+</navigation>

@@ -185,7 +185,7 @@
                       <%= credential.title %>
                     </p>
                     <p class="text-sm text-gray-500">
-                      Expires: <%= credential.end_date.strftime("%B %d, %Y") %>
+                      Expires: <%= credential.end_date&.strftime("%B %d, %Y") || "Not set" %>
                     </p>
                   <% end %>
                 </div>

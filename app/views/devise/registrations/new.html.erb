@@ -1,19 +1,5 @@
 <% content_for :head do %>
   <meta name="csrf-token" content="<%= form_authenticity_token %>">
-  <script type="text/javascript">
-    console.log("=== DEVISE VIEW LOADED ===");
-    console.log("Stimulus application:", typeof window.Stimulus);
-    document.addEventListener('DOMContentLoaded', () => {
-      console.log("DOM Content Loaded");
-      const button = document.querySelector('[data-npi-lookup-target="lookupButton"]');
-      const form = document.querySelector('[data-controller="npi-lookup"]');
-      console.log("Button element:", button);
-      console.log("Form with controller:", form);
-      if (button) {
-        button.addEventListener('click', () => console.log("BUTTON CLICKED!"));
-      }
-    });
-  </script>
 <% end %>
 
 <style>
@@ -95,6 +81,7 @@
               <button type="button"
                 data-action="click->npi-lookup#performLookup"
                 data-npi-lookup-target="lookupButton"
+                data-turbo="false"
                 class="w-full sm:w-auto px-4 sm:px-6 py-3 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors cursor-pointer">
                 Verify NPI
               </button>

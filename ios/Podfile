@@ -1,0 +1,20 @@
+# Podfile for MediVault iOS
+platform :ios, '16.0'
+use_frameworks!
+
+target 'MediVault' do
+  # Hotwire Native
+  pod 'Turbo', '~> 7.1'
+  pod 'Strada', '~> 1.0'
+
+  # Optional: Add additional pods as needed
+  # pod 'Alamofire', '~> 5.8'
+
+  post_install do |installer|
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
+      end
+    end
+  end
+end

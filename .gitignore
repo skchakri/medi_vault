@@ -35,3 +35,32 @@
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+# Android
+/android/local.properties
+/android/.gradle
+/android/build
+/android/app/build
+/android/.idea
+/android/*.iml
+/android/captures
+/android/.externalNativeBuild
+/android/.cxx
+/android/keystore.properties
+/android/*.jks
+/android/*.keystore
+
+# iOS
+/ios/build/
+/ios/DerivedData/
+/ios/Pods/
+/ios/*.xcworkspace
+!/ios/MediVault.xcworkspace
+/ios/.DS_Store
+/ios/xcuserdata/
+/ios/*.ipa
+/ios/*.dSYM.zip
+/ios/fastlane/report.xml
+/ios/fastlane/Preview.html
+/ios/fastlane/screenshots
+/ios/fastlane/test_output

@@ -1,0 +1,68 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AppDelegate.swift in Sources = {isa = PBXBuildFile; };
+		SceneDelegate.swift in Sources = {isa = PBXBuildFile; };
+		WebViewController.swift in Sources = {isa = PBXBuildFile; };
+		PathConfiguration.swift in Sources = {isa = PBXBuildFile; };
+		Assets.xcassets in Resources = {isa = PBXBuildFile; };
+		LaunchScreen.storyboard in Resources = {isa = PBXBuildFile; };
+		Main.storyboard in Resources = {isa = PBXBuildFile; };
+		configuration.json in Resources = {isa = PBXBuildFile; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		MediVault.app = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MediVault.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AppDelegate.swift = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		SceneDelegate.swift = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		WebViewController.swift = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		PathConfiguration.swift = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathConfiguration.swift; sourceTree = "<group>"; };
+		Info.plist = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		Assets.xcassets = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		LaunchScreen.storyboard = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		Main.storyboard = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		configuration.json = {isa = PBXFileReference; lastKnownFileType = text.json; path = configuration.json; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		MainGroup = {
+			isa = PBXGroup;
+			children = (
+				MediVault,
+				Products,
+			);
+			sourceTree = "<group>";
+		};
+		Products = {
+			isa = PBXGroup;
+			children = (
+				MediVault.app,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		MediVault = {
+			isa = PBXGroup;
+			children = (
+				AppDelegate.swift,
+				SceneDelegate.swift,
+				Controllers,
+				Models,
+				Views,
+				Resources,
+				"Supporting Files",
+			);
+			path = MediVault;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+	};
+	rootObject = ProjectObject /* Project object */;
+}
