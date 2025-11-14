@@ -1,5 +1,19 @@
 <% content_for :head do %>
   <meta name="csrf-token" content="<%= form_authenticity_token %>">
+  <script type="text/javascript">
+    console.log("=== DEVISE VIEW LOADED ===");
+    console.log("Stimulus application:", typeof window.Stimulus);
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log("DOM Content Loaded");
+      const button = document.querySelector('[data-npi-lookup-target="lookupButton"]');
+      const form = document.querySelector('[data-controller="npi-lookup"]');
+      console.log("Button element:", button);
+      console.log("Form with controller:", form);
+      if (button) {
+        button.addEventListener('click', () => console.log("BUTTON CLICKED!"));
+      }
+    });
+  </script>
 <% end %>
 
 <style>
