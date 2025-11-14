@@ -6,7 +6,7 @@
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+    background: linear-gradient(135deg, #9333ea 0%, #2563eb 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -30,10 +30,10 @@
       </div>
       <div class="hidden sm:flex sm:items-center sm:space-x-4">
         <span class="text-gray-600 text-sm">Already have an account?</span>
-        <%= link_to "Sign In", new_session_path(resource_name), class: "text-cyan-600 hover:text-cyan-700 font-semibold text-sm" %>
+        <%= link_to "Sign In", new_session_path(resource_name), class: "text-purple-600 hover:text-purple-700 font-semibold text-sm" %>
       </div>
       <div class="flex sm:hidden">
-        <%= link_to "Sign In", new_session_path(resource_name), class: "text-cyan-600 hover:text-cyan-700 font-semibold text-sm" %>
+        <%= link_to "Sign In", new_session_path(resource_name), class: "text-purple-600 hover:text-purple-700 font-semibold text-sm" %>
       </div>
     </div>
   </div>
@@ -69,7 +69,7 @@
                 inputmode: "numeric",
                 required: true,
                 data: { "npi-lookup-target": "npiInput" },
-                class: "w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent" %>
+                class: "w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent" %>
               <p class="text-xs sm:text-sm text-gray-500 mt-1">10-digit medical registration number</p>
             </div>
 
@@ -77,7 +77,7 @@
               <button type="button"
                 data-action="click->npi-lookup#performLookup"
                 data-npi-lookup-target="lookupButton"
-                class="w-full sm:w-auto px-4 sm:px-6 py-3 bg-cyan-600 text-white rounded-lg text-sm font-medium hover:bg-cyan-700 transition-colors cursor-pointer">
+                class="w-full sm:w-auto px-4 sm:px-6 py-3 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors cursor-pointer">
                 Verify NPI
               </button>
             </div>
@@ -103,7 +103,7 @@
                 required: true,
                 disabled: true,
                 data: { "npi-lookup-target": "firstNameInput" },
-                class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent bg-gray-100 cursor-not-allowed opacity-60" %>
+                class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-gray-100 cursor-not-allowed opacity-60" %>
             </div>
 
             <div>
@@ -116,7 +116,7 @@
                 required: true,
                 disabled: true,
                 data: { "npi-lookup-target": "lastNameInput" },
-                class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent bg-gray-100 cursor-not-allowed opacity-60" %>
+                class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-gray-100 cursor-not-allowed opacity-60" %>
             </div>
 
             <div>
@@ -128,7 +128,7 @@
                 placeholder: "+1 (555) 123-4567",
                 disabled: true,
                 data: { "npi-lookup-target": "phoneInput" },
-                class: "w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent bg-gray-100 cursor-not-allowed opacity-60" %>
+                class: "w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-gray-100 cursor-not-allowed opacity-60" %>
             </div>
 
             <div>
@@ -139,7 +139,7 @@
                 placeholder: "e.g., President, Chief Medical Officer",
                 disabled: true,
                 data: { "npi-lookup-target": "titleInput" },
-                class: "w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent bg-gray-100 cursor-not-allowed opacity-60" %>
+                class: "w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-gray-100 cursor-not-allowed opacity-60" %>
             </div>
 
             <div class="sm:col-span-2">
@@ -150,7 +150,7 @@
                 placeholder: "e.g., M.D., M.B.A.",
                 disabled: true,
                 data: { "npi-lookup-target": "credentialsInput" },
-                class: "w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent bg-gray-100 cursor-not-allowed opacity-60" %>
+                class: "w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-gray-100 cursor-not-allowed opacity-60" %>
             </div>
           </div>
         </div>
@@ -163,7 +163,7 @@
             <label for="user_email" class="block text-sm font-medium text-gray-700 mb-2">
               Email <span class="text-red-500">*</span>
             </label>
-            <%= f.email_field :email, autocomplete: "email", placeholder: "johndoe@example.com", required: true, class: "w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent" %>
+            <%= f.email_field :email, autocomplete: "email", placeholder: "johndoe@example.com", required: true, class: "w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent" %>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -171,7 +171,7 @@
               <label for="user_password" class="block text-sm font-medium text-gray-700 mb-2">
                 Password <span class="text-red-500">*</span>
               </label>
-              <%= f.password_field :password, autocomplete: "new-password", placeholder: "••••••••", required: true, class: "w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent" %>
+              <%= f.password_field :password, autocomplete: "new-password", placeholder: "••••••••", required: true, class: "w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent" %>
               <p class="text-xs sm:text-sm text-gray-500 mt-1">Minimum <%= @minimum_password_length || 8 %> characters</p>
             </div>
 
@@ -179,7 +179,7 @@
               <label for="user_password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
                 Confirm Password <span class="text-red-500">*</span>
               </label>
-              <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "••••••••", required: true, class: "w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent" %>
+              <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "••••••••", required: true, class: "w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent" %>
             </div>
           </div>
         </div>
@@ -187,10 +187,10 @@
         <!-- Terms and Conditions -->
         <div class="flex items-start pt-4 sm:pt-6">
           <div class="flex items-center h-5 flex-shrink-0">
-            <input type="checkbox" id="terms" name="terms" required class="w-4 h-4 text-cyan-600 bg-gray-100 border-gray-300 rounded focus:ring-cyan-500">
+            <input type="checkbox" id="terms" name="terms" required class="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500">
           </div>
           <label for="terms" class="ml-3 text-xs sm:text-sm text-gray-600">
-            I agree to the <a href="#" class="text-cyan-600 hover:text-cyan-700 font-medium">Terms of Service</a> and <a href="#" class="text-cyan-600 hover:text-cyan-700 font-medium">Privacy Policy</a>
+            I agree to the <a href="#" class="text-purple-600 hover:text-purple-700 font-medium">Terms of Service</a> and <a href="#" class="text-purple-600 hover:text-purple-700 font-medium">Privacy Policy</a>
           </label>
         </div>
 
@@ -221,7 +221,7 @@
 
       <p class="text-center text-gray-600 text-xs sm:text-sm mt-4 sm:mt-6">
         Already have an account?
-        <%= link_to "Sign in here", new_session_path(resource_name), class: "text-cyan-600 hover:text-cyan-700 font-semibold" %>
+        <%= link_to "Sign in here", new_session_path(resource_name), class: "text-purple-600 hover:text-purple-700 font-semibold" %>
       </p>
     </div>
   </div>

@@ -3,6 +3,7 @@
 module Api
   class NpiLookupsController < ApplicationController
     skip_before_action :verify_authenticity_token, only: [:lookup]
+    skip_before_action :authenticate_user!, only: [:lookup]
 
     def lookup
       npi = params[:npi]

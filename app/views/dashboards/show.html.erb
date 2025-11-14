@@ -149,24 +149,26 @@
     </div>
   </div>
 
-  <!-- Tags Summary Section -->
-  <% if @available_tags.any? %>
-    <div class="bg-white shadow-md rounded-lg p-6">
-      <h3 class="text-lg font-semibold text-gray-900 mb-4">Tags Summary</h3>
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        <% @available_tags.each do |tag| %>
-          <% tag_count = @all_credentials.joins(:tags).where(tags: { id: tag.id }).distinct.count %>
-          <div class="flex flex-col items-center p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
-            style="background-color: <%= tag.color %>08;">
-            <p class="text-sm font-semibold text-center mb-2" style="color: <%= tag.color %>"><%= tag.name %>(<%= tag_count %>)</p>
-          </div>
-        <% end %>
-      </div>
-    </div>
-  <% end %>
+
+
 
   <!-- Two Column Layout -->
-  <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <!-- Tags Summary Section -->
+    <% if @available_tags.any? %>
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Tags Summary</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <% @available_tags.each do |tag| %>
+            <% tag_count = @all_credentials.joins(:tags).where(tags: { id: tag.id }).distinct.count %>
+            <div class="flex flex-col items-center p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
+              style="background-color: <%= tag.color %>08;">
+              <p class="text-sm font-semibold text-center mb-2" style="color: <%= tag.color %>"><%= tag.name %>: <%= tag_count %></p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
     <!-- Recent Credentials -->
     <div class="bg-white shadow-md rounded-lg overflow-hidden">
       <div class="px-6 py-4 border-b border-gray-200">
