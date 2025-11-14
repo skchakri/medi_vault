@@ -3,6 +3,8 @@
 class DashboardsController < ApplicationController
   def show
     @credentials = current_user.credentials.by_expiration.limit(10)
+    @all_credentials = current_user.credentials
+    @available_tags = Tag.default_tags.or(Tag.user_tags(current_user)).alphabetical
     @expiring_soon_count = current_user.credentials.expiring_soon.count
     @expired_count = current_user.credentials.expired.count
     @total_credentials = current_user.credentials_count
