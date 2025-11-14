@@ -16,12 +16,15 @@ export default class extends Controller {
   ]
 
   connect() {
+    console.log("NPI Lookup Controller Connected!")
     this.isLookupSuccessful = false
     this.disableOtherFields()
   }
 
   async performLookup() {
+    console.log("performLookup called!")
     const npi = this.npiInputTarget.value.trim()
+    console.log("NPI value:", npi)
 
     if (!npi) {
       this.showError("Please enter an NPI number")
