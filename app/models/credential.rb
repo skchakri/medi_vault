@@ -6,6 +6,8 @@ class Credential < ApplicationRecord
   has_many :alerts, dependent: :destroy
   has_many :share_links, dependent: :destroy
   has_many :notifications, dependent: :destroy
+  has_many :credential_tags, dependent: :destroy
+  has_many :tags, through: :credential_tags
   has_one_attached :file
 
   # Enums
@@ -33,6 +35,17 @@ class Credential < ApplicationRecord
   scope :expiring_soon, -> { where("end_date <= ? AND end_date > ?", 30.days.from_now, Date.today) }
   scope :expired, -> { where("end_date <= ?", Date.today) }
   scope :by_expiration, -> { order(end_date: :asc) }
+
+  # Tag filtering scopes
+  scope :tagged_with_any, ->(tag_names) {
+    joins(:tags).where(tags: { name: tag_names }).distinct
+  }
+
+  scope :tagged_with_all, ->(tag_names) {
+    tag_names.reduce(all) do |scope, tag_name|
+      scope.joins(:tags).where(tags: { name: tag_name })
+    end.distinct
+  }
 
   # Instance Methods
   def days_until_expiration
@@ -63,6 +76,20 @@ class Credential < ApplicationRecord
 
   def displayable_end_date
     end_date&.strftime("%B %d, %Y") || "N/A"
+  end
+
+  # Tag helper methods
+  def tag_list
+    tags.pluck(:name).join(', ')
+  end
+
+  def tag_list=(names)
+    tag_names = names.to_s.split(',').map(&:strip).reject(&:blank?)
+    self.tags = tag_names.map do |name|
+      Tag.find_or_initialize_by(name: name.downcase) do |tag|
+        tag.user = self.user unless Tag.exists?(name: name.downcase, is_default: true)
+      end
+    end
   end
 
   private

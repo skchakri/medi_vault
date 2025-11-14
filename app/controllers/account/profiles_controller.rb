@@ -25,11 +25,17 @@ module Account
     end
 
     def verify_npi
-      result = NpiVerificationService.call(user: current_user, npi: params[:npi])
+      result = NpiLookupService.call(user: current_user, npi: params[:npi])
 
       if result.success?
-        flash[:notice] = "NPI verified successfully!"
-        redirect_to account_profile_path
+        # Save the populated data
+        if current_user.save
+          flash[:notice] = "NPI verified successfully! Your profile has been updated with information from the NPI Registry."
+          redirect_to account_profile_path
+        else
+          flash[:alert] = "NPI verified but failed to save: #{current_user.errors.full_messages.join(', ')}"
+          redirect_to account_profile_path
+        end
       else
         flash[:alert] = "NPI verification failed: #{result.errors.join(', ')}"
         redirect_to account_profile_path
@@ -39,7 +45,20 @@ module Account
     private
 
     def profile_params
-      params.require(:user).permit(:first_name, :last_name, :phone, :npi, :notification_email, :notification_sms, :avatar)
+      params.require(:user).permit(
+        :first_name,
+        :last_name,
+        :phone,
+        :npi,
+        :title,
+        :official_credentials,
+        :notification_email,
+        :notification_sms,
+        :avatar,
+        mailing_address: {},
+        practice_address: {},
+        location_address: {}
+      )
     end
 
     # Check if we need to validate password (if user is trying to change password)

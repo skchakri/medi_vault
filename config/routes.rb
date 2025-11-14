@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   # Devise routes
-  devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
+  devise_for :users, controllers: {
+    omniauth_callbacks: "users/omniauth_callbacks",
+    registrations: "users/registrations"
+  }
 
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check
@@ -25,6 +28,10 @@ Rails.application.routes.draw do
     resource :dashboard, only: [:show]
 
     resources :credentials do
+      collection do
+        get :bulk_new
+        post :bulk_create
+      end
       member do
         post :extract # Re-trigger AI extraction
         get :download
@@ -60,6 +67,7 @@ Rails.application.routes.draw do
     end
 
     resources :alert_types
+    resources :tags
     resource :settings, only: [:show, :update]
     resources :email_templates
     resources :llm_requests, only: [:index, :show]

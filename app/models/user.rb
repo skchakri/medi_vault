@@ -65,6 +65,36 @@ class User < ApplicationRecord
     npi_verified_at.present?
   end
 
+  def individual_npi?
+    npi_enumeration_type == "NPI-1"
+  end
+
+  def organization_npi?
+    npi_enumeration_type == "NPI-2"
+  end
+
+  def formatted_mailing_address
+    format_address(mailing_address)
+  end
+
+  def formatted_practice_address
+    format_address(practice_address)
+  end
+
+  def formatted_location_address
+    format_address(location_address)
+  end
+
+  def lookup_and_populate_npi(npi_number)
+    result = NpiLookupService.call(user: self, npi: npi_number)
+
+    if result.success?
+      result.data
+    else
+      { errors: result.errors }
+    end
+  end
+
   def within_credential_limit?
     case plan
     when "free"
@@ -149,5 +179,23 @@ class User < ApplicationRecord
 
     # For new records, require password unless OAuth user
     new_record? && !oauth_user?
+  end
+
+  def format_address(address_hash)
+    return nil if address_hash.blank?
+
+    parts = []
+    parts << address_hash["address_1"] if address_hash["address_1"].present?
+    parts << address_hash["address_2"] if address_hash["address_2"].present?
+
+    city_state_zip = []
+    city_state_zip << address_hash["city"] if address_hash["city"].present?
+    city_state_zip << address_hash["state"] if address_hash["state"].present?
+    city_state_zip << address_hash["postal_code"] if address_hash["postal_code"].present?
+
+    parts << city_state_zip.join(", ") if city_state_zip.any?
+    parts << address_hash["country_code"] if address_hash["country_code"].present? && address_hash["country_code"] != "US"
+
+    parts.join("\n")
   end
 end

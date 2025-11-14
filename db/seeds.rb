@@ -10,6 +10,7 @@ if Rails.env.development?
   Alert.destroy_all
   ShareLink.destroy_all
   Credential.destroy_all
+  Tag.destroy_all
   ApiSetting.destroy_all
   User.destroy_all
   puts "✅ Existing data cleared"
@@ -277,10 +278,121 @@ AlertType.create!([
 
 puts "✅ Created #{AlertType.count} alert types"
 
+# Create Default Tags
+puts "\n🏷️  Creating default tags..."
+
+Tag.create!([
+  {
+    name: 'medical license',
+    color: '#3B82F6', # blue
+    description: 'Medical licenses and state-specific certifications',
+    is_default: true,
+    active: true
+  },
+  {
+    name: 'insurance',
+    color: '#10B981', # emerald
+    description: 'Professional liability and malpractice insurance',
+    is_default: true,
+    active: true
+  },
+  {
+    name: 'certification',
+    color: '#8B5CF6', # violet
+    description: 'Professional certifications (BLS, ACLS, PALS, etc.)',
+    is_default: true,
+    active: true
+  },
+  {
+    name: 'board certification',
+    color: '#EF4444', # red
+    description: 'Specialty board certifications',
+    is_default: true,
+    active: true
+  },
+  {
+    name: 'dea license',
+    color: '#EC4899', # pink
+    description: 'DEA registrations and controlled substance licenses',
+    is_default: true,
+    active: true
+  },
+  {
+    name: 'hospital privileges',
+    color: '#06B6D4', # cyan
+    description: 'Hospital credentialing and privileges',
+    is_default: true,
+    active: true
+  },
+  {
+    name: 'cme credits',
+    color: '#F59E0B', # amber
+    description: 'Continuing medical education credits',
+    is_default: true,
+    active: true
+  },
+  {
+    name: 'background check',
+    color: '#84CC16', # lime
+    description: 'Background checks and clearances',
+    is_default: true,
+    active: true
+  }
+])
+
+puts "✅ Created #{Tag.count} default tags"
+
+# Assign tags to existing credentials
+puts "\n🔗 Assigning tags to credentials..."
+
+# Tag medical licenses
+Credential.where("title ILIKE ?", "%license%").where.not("title ILIKE ?", "%dea%").each do |cred|
+  cred.tags << Tag.find_by(name: 'medical license') unless cred.tags.include?(Tag.find_by(name: 'medical license'))
+end
+
+# Tag DEA licenses
+Credential.where("title ILIKE ?", "%dea%").each do |cred|
+  cred.tags << Tag.find_by(name: 'dea license') unless cred.tags.include?(Tag.find_by(name: 'dea license'))
+end
+
+# Tag certifications (BLS, ACLS, PALS, EMT)
+Credential.where("title ILIKE ? OR title ILIKE ? OR title ILIKE ? OR title ILIKE ?", "%bls%", "%acls%", "%pals%", "%emt%").each do |cred|
+  cred.tags << Tag.find_by(name: 'certification') unless cred.tags.include?(Tag.find_by(name: 'certification'))
+end
+
+# Tag board certifications
+Credential.where("title ILIKE ?", "%board certification%").each do |cred|
+  cred.tags << Tag.find_by(name: 'board certification') unless cred.tags.include?(Tag.find_by(name: 'board certification'))
+end
+
+# Tag insurance
+Credential.where("title ILIKE ?", "%insurance%").each do |cred|
+  cred.tags << Tag.find_by(name: 'insurance') unless cred.tags.include?(Tag.find_by(name: 'insurance'))
+end
+
+# Tag hospital privileges
+Credential.where("title ILIKE ? OR title ILIKE ?", "%hospital%", "%credentialing%").each do |cred|
+  cred.tags << Tag.find_by(name: 'hospital privileges') unless cred.tags.include?(Tag.find_by(name: 'hospital privileges'))
+end
+
+puts "✅ Tags assigned to credentials"
+
 # Create API Settings
 puts "\n⚙️  Creating API settings..."
 
 ApiSetting.create!([
+  {
+    key: 'npi_api_url',
+    value: ENV.fetch('NPI_API_URL', 'https://npiregistry.cms.hhs.gov/api/'),
+    enabled: true,
+    description: 'NPI Registry API URL for provider verification'
+  },
+  {
+    key: 'npi_api_version',
+    value: ENV.fetch('NPI_API_VERSION', '2.1'),
+    enabled: true,
+    description: 'NPI Registry API Version'
+  },
   {
     key: 'openai_api_key',
     value: ENV.fetch('OPENAI_API_KEY', ''),
@@ -359,6 +471,7 @@ puts "  • Users: #{User.count}"
 puts "    - Admin: #{User.admin.count}"
 puts "    - Regular: #{User.user.count}"
 puts "  • Credentials: #{Credential.count}"
+puts "  • Tags: #{Tag.count}"
 puts "  • Alerts: #{Alert.count}"
 puts "  • Alert Types: #{AlertType.count}"
 puts "  • Notifications: #{Notification.count}"

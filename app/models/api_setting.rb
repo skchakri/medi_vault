@@ -10,6 +10,7 @@ class ApiSetting < ApplicationRecord
 
   KEYS = {
     npi_api_url: 'NPI Registry API URL',
+    npi_api_version: 'NPI Registry API Version',
     openai_api_key: 'OpenAI API Key',
     openai_model: 'OpenAI Default Model',
     ollama_url: 'Ollama API URL',

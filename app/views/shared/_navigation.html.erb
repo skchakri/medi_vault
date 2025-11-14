@@ -21,6 +21,8 @@
 
             <%= link_to "Alert Configuration", admin_alert_types_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(admin_alert_types_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
 
+            <%= link_to "Tag Management", admin_tags_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(admin_tags_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
+
             <%= link_to "Email Templates", admin_email_templates_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(admin_email_templates_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
 
             <%= link_to "Settings", admin_settings_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(admin_settings_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
@@ -97,6 +99,8 @@
           <%= link_to "Users", admin_users_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(admin_users_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
 
           <%= link_to "Alert Configuration", admin_alert_types_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(admin_alert_types_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
+
+          <%= link_to "Tag Management", admin_tags_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(admin_tags_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
 
           <%= link_to "Email Templates", admin_email_templates_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(admin_email_templates_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
 

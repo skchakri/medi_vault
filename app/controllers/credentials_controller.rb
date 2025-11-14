@@ -6,6 +6,18 @@ class CredentialsController < ApplicationController
   def index
     @credentials = current_user.credentials
 
+    # Load all available tags for filtering
+    @available_tags = Tag.default_tags.or(Tag.user_tags(current_user)).alphabetical
+
+    # Apply tag filter if tag_ids parameter is present
+    if params[:tag_ids].present?
+      tag_ids = params[:tag_ids].reject(&:blank?)
+      if tag_ids.any?
+        tag_names = Tag.where(id: tag_ids).pluck(:name)
+        @credentials = @credentials.tagged_with_any(tag_names)
+      end
+    end
+
     # Apply search filter if search parameter is present
     if params[:search].present?
       search_term = "%#{params[:search]}%"
@@ -26,6 +38,7 @@ class CredentialsController < ApplicationController
       redirect_to pricing_path and return
     end
     @credential = current_user.credentials.new
+    load_available_tags
   end
 
   def create
@@ -42,11 +55,59 @@ class CredentialsController < ApplicationController
       flash[:notice] = "Credential uploaded successfully! AI extraction will process your document."
       redirect_to @credential
     else
+      load_available_tags
       render :new, status: :unprocessable_entity
     end
   end
 
+  def bulk_new
+    unless current_user.within_credential_limit?
+      flash[:alert] = "You've reached your credential limit (#{current_user.max_credentials}). Please upgrade your plan."
+      redirect_to pricing_path and return
+    end
+  end
+
+  def bulk_create
+    files = params[:files] || []
+
+    if files.empty?
+      flash[:alert] = "Please select at least one file to upload."
+      redirect_to bulk_new_credentials_path and return
+    end
+
+    # Check plan limits
+    current_count = current_user.credentials.count
+    max_allowed = current_user.max_credentials
+    files_count = files.size
+
+    if current_count + files_count > max_allowed
+      available_slots = max_allowed - current_count
+      flash[:alert] = "You can only upload #{available_slots} more credential(s). Your plan allows #{max_allowed} total credentials. Please upgrade to upload more."
+      redirect_to bulk_new_credentials_path and return
+    end
+
+    @successes = []
+    @failures = []
+
+    files.each do |file|
+      credential = current_user.credentials.new(
+        title: file.original_filename.gsub(/\.[^.]+\z/, ''), # Remove file extension
+        file: file
+      )
+
+      if credential.save
+        @successes << { credential: credential, filename: file.original_filename }
+      else
+        @failures << { filename: file.original_filename, errors: credential.errors.full_messages }
+      end
+    end
+
+    # Render results view
+    render :bulk_create
+  end
+
   def edit
+    load_available_tags
   end
 
   def update
@@ -54,6 +115,7 @@ class CredentialsController < ApplicationController
       flash[:notice] = "Credential updated successfully."
       redirect_to @credential
     else
+      load_available_tags
       render :edit, status: :unprocessable_entity
     end
   end
@@ -82,6 +144,10 @@ class CredentialsController < ApplicationController
   end
 
   def credential_params
-    params.require(:credential).permit(:title, :start_date, :end_date, :notes, :file)
+    params.require(:credential).permit(:title, :start_date, :end_date, :notes, :file, tag_ids: [])
+  end
+
+  def load_available_tags
+    @available_tags = Tag.default_tags.or(Tag.user_tags(current_user)).alphabetical
   end
 end

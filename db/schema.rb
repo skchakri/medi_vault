@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_13_000002) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_14_063040) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -70,7 +70,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_13_000002) do
     t.index ["alert_date"], name: "index_alerts_on_alert_date"
     t.index ["alert_type_id", "credential_id"], name: "index_alerts_on_alert_type_id_and_credential_id"
     t.index ["alert_type_id"], name: "index_alerts_on_alert_type_id"
-    t.index ["credential_id", "offset_days"], name: "index_alerts_on_credential_id_and_offset_days", unique: true
+    t.index ["credential_id", "offset_days", "alert_type_id"], name: "index_alerts_on_credential_offset_and_type", unique: true
     t.index ["credential_id"], name: "index_alerts_on_credential_id"
     t.index ["status"], name: "index_alerts_on_status"
   end
@@ -88,6 +88,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_13_000002) do
     t.index ["key"], name: "index_api_settings_on_key", unique: true
   end
 
+  create_table "credential_tags", force: :cascade do |t|
+    t.bigint "credential_id", null: false
+    t.bigint "tag_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["credential_id", "tag_id"], name: "index_credential_tags_on_credential_id_and_tag_id", unique: true
+    t.index ["credential_id"], name: "index_credential_tags_on_credential_id"
+    t.index ["tag_id"], name: "index_credential_tags_on_tag_id"
+  end
+
   create_table "credentials", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "title", null: false
@@ -101,6 +111,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_13_000002) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "tags_count", default: 0
     t.index ["ai_processed"], name: "index_credentials_on_ai_processed"
     t.index ["end_date"], name: "index_credentials_on_end_date"
     t.index ["status"], name: "index_credentials_on_status"
@@ -175,6 +186,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_13_000002) do
     t.index ["token"], name: "index_share_links_on_token", unique: true
   end
 
+  create_table "tags", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "color", default: "#6B7280"
+    t.text "description"
+    t.boolean "is_default", default: false
+    t.boolean "active", default: true
+    t.bigint "user_id"
+    t.integer "usage_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index "lower((name)::text)", name: "index_tags_on_lower_name"
+    t.index ["active"], name: "index_tags_on_active"
+    t.index ["is_default"], name: "index_tags_on_is_default"
+    t.index ["name"], name: "index_tags_on_name", unique: true
+    t.index ["usage_count"], name: "index_tags_on_usage_count"
+    t.index ["user_id"], name: "index_tags_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -214,6 +243,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_13_000002) do
     t.string "oauth_token"
     t.datetime "oauth_expires_at"
     t.string "avatar_url"
+    t.string "title"
+    t.string "official_credentials"
+    t.string "npi_enumeration_type"
+    t.jsonb "mailing_address"
+    t.jsonb "practice_address"
+    t.jsonb "location_address"
+    t.jsonb "npi_data"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["npi"], name: "index_users_on_npi"
@@ -229,9 +265,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_13_000002) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "alerts", "alert_types"
   add_foreign_key "alerts", "credentials"
+  add_foreign_key "credential_tags", "credentials"
+  add_foreign_key "credential_tags", "tags"
   add_foreign_key "credentials", "users"
   add_foreign_key "llm_requests", "users"
   add_foreign_key "notifications", "credentials"
   add_foreign_key "notifications", "users"
   add_foreign_key "share_links", "credentials"
+  add_foreign_key "tags", "users"
 end
