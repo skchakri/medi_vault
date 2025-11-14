@@ -7,28 +7,29 @@ export default class extends Controller {
   }
 
   connect() {
-    // Initialize with no tags selected (all active by default)
-    this.selectedTagsValue = []
+    const initialSelection = this.hasSelectedTagsValue ? this.selectedTagsValue.map(String) : []
+    this.selectedTagsValue = initialSelection
+
     this.updateHiddenInputs()
+    this.updateTagStyles()
   }
 
   toggleTag(event) {
     const tagId = event.currentTarget.dataset.tagId
-    const index = this.selectedTagsValue.indexOf(tagId)
+    let selections = [...this.selectedTagsValue.map(String)]
+    const index = selections.indexOf(tagId)
 
     if (index === -1) {
-      // Tag was not selected, add it
-      this.selectedTagsValue.push(tagId)
-      event.currentTarget.classList.remove('opacity-50')
-      event.currentTarget.classList.add('ring-2', 'ring-offset-2')
+      selections.push(tagId)
     } else {
-      // Tag was selected, remove it
-      this.selectedTagsValue.splice(index, 1)
-      event.currentTarget.classList.add('opacity-50')
-      event.currentTarget.classList.remove('ring-2', 'ring-offset-2')
+      selections.splice(index, 1)
     }
 
+    selections = selections.filter(Boolean)
+    this.selectedTagsValue = selections
+
     this.updateHiddenInputs()
+    this.updateTagStyles()
     this.submitForm()
   }
 
@@ -47,6 +48,21 @@ export default class extends Controller {
         this.formTarget.appendChild(input)
       })
     }
+  }
+
+  updateTagStyles() {
+    const activeSelection = this.selectedTagsValue.map(String)
+    const hasExplicitSelection = activeSelection.length > 0
+
+    this.tagTargets.forEach(tag => {
+      const tagId = tag.dataset.tagId
+      const isActive = !hasExplicitSelection || activeSelection.includes(tagId)
+
+      tag.classList.toggle('opacity-50', !isActive)
+      tag.classList.toggle('ring-2', hasExplicitSelection && !isActive)
+      tag.classList.toggle('ring-offset-2', hasExplicitSelection && !isActive)
+      tag.setAttribute('aria-pressed', isActive)
+    })
   }
 
   submitForm() {

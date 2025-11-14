@@ -108,7 +108,7 @@ class Credential < ApplicationRecord
   end
 
   def schedule_ai_extraction
-    CredentialExtractionJob.perform_later(id) if file.attached?
+    AnalyzeCredentialJob.perform_later(id) if file.attached?
   end
 
   def create_default_alerts

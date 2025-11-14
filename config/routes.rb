@@ -55,6 +55,11 @@ Rails.application.routes.draw do
   # Public share link access
   get "share/:token", to: "share_links#show", as: :share
 
+  # API routes
+  namespace :api do
+    post "npi_lookups/lookup", to: "npi_lookups#lookup", as: :npi_lookup
+  end
+
   # Admin routes
   namespace :admin do
     root "dashboard#index"

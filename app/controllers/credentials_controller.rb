@@ -50,9 +50,7 @@ class CredentialsController < ApplicationController
     @credential = current_user.credentials.new(credential_params)
 
     if @credential.save
-      # Trigger AI extraction in background
-      # CredentialExtractionJob.perform_later(@credential.id)
-      flash[:notice] = "Credential uploaded successfully! AI extraction will process your document."
+      flash[:notice] = "Credential uploaded successfully! AI analysis will process your document."
       redirect_to @credential
     else
       load_available_tags
@@ -131,9 +129,8 @@ class CredentialsController < ApplicationController
   end
 
   def extract
-    # Re-trigger AI extraction
-    # CredentialExtractionJob.perform_later(@credential.id)
-    flash[:notice] = "AI extraction has been re-triggered for this credential."
+    AnalyzeCredentialJob.perform_later(@credential.id)
+    flash[:notice] = "AI analysis has been re-triggered for this credential."
     redirect_to @credential
   end
 
