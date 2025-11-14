@@ -56,11 +56,23 @@ export default class extends Controller {
 
     this.tagTargets.forEach(tag => {
       const tagId = tag.dataset.tagId
+      const tagColor = tag.dataset.tagColor
       const isActive = !hasExplicitSelection || activeSelection.includes(tagId)
 
-      tag.classList.toggle('opacity-50', !isActive)
-      tag.classList.toggle('ring-2', hasExplicitSelection && !isActive)
-      tag.classList.toggle('ring-offset-2', hasExplicitSelection && !isActive)
+      if (isActive) {
+        // Active state: colored background with white text
+        tag.style.backgroundColor = tagColor
+        tag.style.color = 'white'
+        tag.style.border = 'none'
+        tag.style.opacity = '1'
+      } else {
+        // Inactive state: light gray background with colored border
+        tag.style.backgroundColor = 'rgba(229, 231, 235, 0.5)'
+        tag.style.color = '#6B7280'
+        tag.style.border = `2px solid ${tagColor}`
+        tag.style.opacity = '0.7'
+      }
+
       tag.setAttribute('aria-pressed', isActive)
     })
   }
