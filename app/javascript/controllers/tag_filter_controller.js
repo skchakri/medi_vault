@@ -78,6 +78,8 @@ export default class extends Controller {
   }
 
   submitForm() {
-    this.formTarget.requestSubmit()
+    // Use submit() instead of requestSubmit() for better mobile compatibility
+    // requestSubmit() is not fully supported on all mobile browsers
+    this.formTarget.submit()
   }
 }

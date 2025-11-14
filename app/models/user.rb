@@ -146,6 +146,69 @@ class User < ApplicationRecord
     plan_active? || (trial_ends_at.present? && trial_ends_at > Time.current)
   end
 
+  # NPI-related helper methods
+  def full_name_with_prefix
+    parts = []
+    parts << name_prefix if name_prefix.present?
+    parts << first_name
+    parts << middle_name if middle_name.present?
+    parts << last_name
+    parts << name_suffix if name_suffix.present?
+    parts.join(" ")
+  end
+
+  def primary_taxonomy
+    return nil if taxonomies.blank?
+    taxonomies.find { |t| t["primary"] == true } || taxonomies.first
+  end
+
+  def formatted_taxonomies
+    return [] if taxonomies.blank?
+    taxonomies.map do |t|
+      {
+        code: t["code"],
+        description: t["desc"],
+        state: t["state"],
+        license: t["license"],
+        primary: t["primary"]
+      }
+    end
+  end
+
+  def formatted_identifiers
+    return [] if identifiers.blank?
+    identifiers.map do |i|
+      {
+        type: i["desc"],
+        identifier: i["identifier"],
+        code: i["code"],
+        issuer: i["issuer"],
+        state: i["state"]
+      }
+    end
+  end
+
+  def active_npi_status?
+    npi_status == "A"
+  end
+
+  def npi_status_text
+    case npi_status
+    when "A" then "Active"
+    when "D" then "Deactivated"
+    else "Unknown"
+    end
+  end
+
+  def gender_display
+    case gender
+    when "M" then "Male"
+    when "F" then "Female"
+    when "X" then "Other"
+    else gender
+    end
+  end
+
   private
 
   def set_default_plan

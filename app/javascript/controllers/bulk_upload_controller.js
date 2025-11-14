@@ -21,8 +21,13 @@ export default class extends Controller {
 
   openFilePicker(event) {
     event.preventDefault()
+    event.stopPropagation()
     console.log("Opening file picker...")
-    this.inputTarget.click()
+    // Use setTimeout to ensure the event is fully processed before triggering click
+    // This helps with mobile browser compatibility
+    setTimeout(() => {
+      this.inputTarget.click()
+    }, 0)
   }
 
   handleDragOver(event) {

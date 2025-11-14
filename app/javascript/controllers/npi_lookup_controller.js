@@ -9,10 +9,34 @@ export default class extends Controller {
     "fieldsContainer",
     "firstNameInput",
     "lastNameInput",
+    "namePrefixInput",
+    "middleNameInput",
+    "nameSuffixInput",
+    "genderInput",
     "phoneInput",
     "titleInput",
     "credentialsInput",
-    "clearButton"
+    "clearButton",
+    // Address sections
+    "addressSection",
+    "mailingAddressContainer",
+    "mailingAddress",
+    "practiceAddressContainer",
+    "practiceAddress",
+    "locationAddressContainer",
+    "locationAddress",
+    // NPI Details section
+    "npiDetailsSection",
+    "npiType",
+    "npiStatusDisplay",
+    "enumerationDate",
+    "lastUpdated",
+    // Taxonomies section
+    "taxonomiesSection",
+    "taxonomiesList",
+    // Identifiers section
+    "identifiersSection",
+    "identifiersList"
   ]
 
   connect() {
@@ -76,12 +100,41 @@ export default class extends Controller {
     this.npiInputTarget.focus()
     this.isLookupSuccessful = false
 
-    // Clear all fields
+    // Clear all basic fields
     if (this.hasFirstNameInputTarget) this.firstNameInputTarget.value = ""
     if (this.hasLastNameInputTarget) this.lastNameInputTarget.value = ""
+    if (this.hasNamePrefixInputTarget) this.namePrefixInputTarget.value = ""
+    if (this.hasMiddleNameInputTarget) this.middleNameInputTarget.value = ""
+    if (this.hasNameSuffixInputTarget) this.nameSuffixInputTarget.value = ""
+    if (this.hasGenderInputTarget) this.genderInputTarget.value = ""
     if (this.hasPhoneInputTarget) this.phoneInputTarget.value = ""
     if (this.hasTitleInputTarget) this.titleInputTarget.value = ""
     if (this.hasCredentialsInputTarget) this.credentialsInputTarget.value = ""
+
+    // Clear and hide address sections
+    if (this.hasAddressSectionTarget) {
+      this.addressSectionTarget.classList.add("hidden")
+      if (this.hasMailingAddressContainerTarget) this.mailingAddressContainerTarget.classList.add("hidden")
+      if (this.hasPracticeAddressContainerTarget) this.practiceAddressContainerTarget.classList.add("hidden")
+      if (this.hasLocationAddressContainerTarget) this.locationAddressContainerTarget.classList.add("hidden")
+    }
+
+    // Clear and hide NPI details section
+    if (this.hasNpiDetailsSectionTarget) {
+      this.npiDetailsSectionTarget.classList.add("hidden")
+    }
+
+    // Clear and hide taxonomies section
+    if (this.hasTaxonomiesSectionTarget) {
+      this.taxonomiesSectionTarget.classList.add("hidden")
+      if (this.hasTaxonomiesListTarget) this.taxonomiesListTarget.innerHTML = ""
+    }
+
+    // Clear and hide identifiers section
+    if (this.hasIdentifiersSectionTarget) {
+      this.identifiersSectionTarget.classList.add("hidden")
+      if (this.hasIdentifiersListTarget) this.identifiersListTarget.innerHTML = ""
+    }
 
     // Clear status
     this.npiStatusTarget.innerHTML = ""
@@ -91,11 +144,24 @@ export default class extends Controller {
   }
 
   populateFields(data) {
+    // Basic fields
     if (this.hasFirstNameInputTarget && data.first_name) {
       this.firstNameInputTarget.value = data.first_name
     }
     if (this.hasLastNameInputTarget && data.last_name) {
       this.lastNameInputTarget.value = data.last_name
+    }
+    if (this.hasNamePrefixInputTarget && data.name_prefix) {
+      this.namePrefixInputTarget.value = data.name_prefix
+    }
+    if (this.hasMiddleNameInputTarget && data.middle_name) {
+      this.middleNameInputTarget.value = data.middle_name
+    }
+    if (this.hasNameSuffixInputTarget && data.name_suffix) {
+      this.nameSuffixInputTarget.value = data.name_suffix
+    }
+    if (this.hasGenderInputTarget && data.gender) {
+      this.genderInputTarget.value = data.gender
     }
     if (this.hasPhoneInputTarget && data.phone) {
       this.phoneInputTarget.value = data.phone
@@ -106,6 +172,180 @@ export default class extends Controller {
     if (this.hasCredentialsInputTarget && data.official_credentials) {
       this.credentialsInputTarget.value = data.official_credentials
     }
+
+    // Populate address information
+    this.populateAddresses(data)
+
+    // Populate NPI details
+    this.populateNpiDetails(data)
+
+    // Populate taxonomies
+    this.populateTaxonomies(data)
+
+    // Populate identifiers
+    this.populateIdentifiers(data)
+  }
+
+  populateAddresses(data) {
+    if (!this.hasAddressSectionTarget) return
+
+    let hasAnyAddress = false
+
+    // Mailing address
+    if (data.formatted_mailing_address && this.hasMailingAddressTarget) {
+      this.mailingAddressTarget.textContent = data.formatted_mailing_address
+      this.mailingAddressContainerTarget.classList.remove("hidden")
+      hasAnyAddress = true
+    }
+
+    // Practice address
+    if (data.formatted_practice_address && this.hasPracticeAddressTarget) {
+      this.practiceAddressTarget.textContent = data.formatted_practice_address
+      this.practiceAddressContainerTarget.classList.remove("hidden")
+      hasAnyAddress = true
+    }
+
+    // Location address
+    if (data.formatted_location_address && this.hasLocationAddressTarget) {
+      this.locationAddressTarget.textContent = data.formatted_location_address
+      this.locationAddressContainerTarget.classList.remove("hidden")
+      hasAnyAddress = true
+    }
+
+    // Show address section if any address is present
+    if (hasAnyAddress) {
+      this.addressSectionTarget.classList.remove("hidden")
+    }
+  }
+
+  populateNpiDetails(data) {
+    if (!this.hasNpiDetailsSectionTarget) return
+
+    let hasAnyDetail = false
+
+    // NPI Type
+    if (data.npi_enumeration_type && this.hasNpiTypeTarget) {
+      const npiTypeText = data.npi_enumeration_type === "NPI-1" ?
+        "Individual Provider (NPI-1)" : "Organization (NPI-2)"
+      this.npiTypeTarget.textContent = npiTypeText
+      hasAnyDetail = true
+    }
+
+    // NPI Status
+    if (data.npi_status && this.hasNpiStatusDisplayTarget) {
+      const statusText = data.npi_status === "A" ? "Active" :
+                        data.npi_status === "D" ? "Deactivated" : "Unknown"
+      this.npiStatusDisplayTarget.textContent = statusText
+      hasAnyDetail = true
+    }
+
+    // Enumeration Date
+    if (data.enumeration_date && this.hasEnumerationDateTarget) {
+      this.enumerationDateTarget.textContent = this.formatDate(data.enumeration_date)
+      hasAnyDetail = true
+    }
+
+    // Last Updated
+    if (data.last_updated && this.hasLastUpdatedTarget) {
+      this.lastUpdatedTarget.textContent = this.formatDate(data.last_updated)
+      hasAnyDetail = true
+    }
+
+    // Show NPI details section if any detail is present
+    if (hasAnyDetail) {
+      this.npiDetailsSectionTarget.classList.remove("hidden")
+    }
+  }
+
+  populateTaxonomies(data) {
+    if (!this.hasTaxonomiesSectionTarget || !this.hasTaxonomiesListTarget) return
+    if (!data.taxonomies || data.taxonomies.length === 0) return
+
+    const taxonomiesHtml = data.taxonomies.map((taxonomy, index) => {
+      const isPrimary = taxonomy.primary === true
+      return `
+        <div class="border border-gray-200 rounded-lg p-3 ${isPrimary ? 'bg-purple-50 border-purple-300' : 'bg-gray-50'}">
+          <div class="flex items-start justify-between mb-2">
+            <div class="flex-1">
+              <h4 class="text-sm font-semibold text-gray-900">
+                ${taxonomy.desc || `Specialty ${index + 1}`}
+              </h4>
+              ${isPrimary ? '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800 mt-1">Primary</span>' : ''}
+            </div>
+          </div>
+          <dl class="grid grid-cols-2 gap-2 text-xs mt-2">
+            <div>
+              <dt class="font-medium text-gray-500">Taxonomy Code</dt>
+              <dd class="text-gray-900">${taxonomy.code || 'N/A'}</dd>
+            </div>
+            ${taxonomy.state ? `
+              <div>
+                <dt class="font-medium text-gray-500">State</dt>
+                <dd class="text-gray-900">${taxonomy.state}</dd>
+              </div>
+            ` : ''}
+            ${taxonomy.license ? `
+              <div class="col-span-2">
+                <dt class="font-medium text-gray-500">License Number</dt>
+                <dd class="text-gray-900">${taxonomy.license}</dd>
+              </div>
+            ` : ''}
+          </dl>
+        </div>
+      `
+    }).join('')
+
+    this.taxonomiesListTarget.innerHTML = taxonomiesHtml
+    this.taxonomiesSectionTarget.classList.remove("hidden")
+  }
+
+  populateIdentifiers(data) {
+    if (!this.hasIdentifiersSectionTarget || !this.hasIdentifiersListTarget) return
+    if (!data.identifiers || data.identifiers.length === 0) return
+
+    const identifiersHtml = data.identifiers.map((identifier, index) => {
+      return `
+        <div class="border border-gray-200 rounded-lg p-3 bg-gray-50">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <div>
+              <span class="font-medium text-gray-700">Type:</span>
+              <span class="text-gray-900 ml-2">${identifier.desc || `Identifier ${index + 1}`}</span>
+            </div>
+            <div>
+              <span class="font-medium text-gray-700">Identifier:</span>
+              <span class="text-gray-900 ml-2">${identifier.identifier || 'N/A'}</span>
+            </div>
+            ${identifier.code ? `
+              <div>
+                <span class="font-medium text-gray-700">Code:</span>
+                <span class="text-gray-900 ml-2">${identifier.code}</span>
+              </div>
+            ` : ''}
+            ${identifier.state ? `
+              <div>
+                <span class="font-medium text-gray-700">State:</span>
+                <span class="text-gray-900 ml-2">${identifier.state}</span>
+              </div>
+            ` : ''}
+            ${identifier.issuer ? `
+              <div class="sm:col-span-2">
+                <span class="font-medium text-gray-700">Issuer:</span>
+                <span class="text-gray-900 ml-2">${identifier.issuer}</span>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `
+    }).join('')
+
+    this.identifiersListTarget.innerHTML = identifiersHtml
+    this.identifiersSectionTarget.classList.remove("hidden")
+  }
+
+  formatDate(dateString) {
+    if (!dateString) return ''
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
   }
 
   showSuccess(data) {
@@ -150,6 +390,10 @@ export default class extends Controller {
     const fields = [
       this.firstNameInputTarget,
       this.lastNameInputTarget,
+      this.namePrefixInputTarget,
+      this.middleNameInputTarget,
+      this.nameSuffixInputTarget,
+      this.genderInputTarget,
       this.phoneInputTarget,
       this.titleInputTarget,
       this.credentialsInputTarget
@@ -171,6 +415,10 @@ export default class extends Controller {
     const fields = [
       this.firstNameInputTarget,
       this.lastNameInputTarget,
+      this.namePrefixInputTarget,
+      this.middleNameInputTarget,
+      this.nameSuffixInputTarget,
+      this.genderInputTarget,
       this.phoneInputTarget,
       this.titleInputTarget,
       this.credentialsInputTarget

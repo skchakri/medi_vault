@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_14_063040) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_14_190851) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -250,6 +250,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_14_063040) do
     t.jsonb "practice_address"
     t.jsonb "location_address"
     t.jsonb "npi_data"
+    t.string "gender"
+    t.string "name_prefix"
+    t.string "name_suffix"
+    t.string "middle_name"
+    t.date "enumeration_date"
+    t.date "last_updated"
+    t.date "certification_date"
+    t.string "npi_status"
+    t.boolean "sole_proprietor"
+    t.boolean "organizational_subpart"
+    t.jsonb "taxonomies"
+    t.jsonb "identifiers"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["npi"], name: "index_users_on_npi"

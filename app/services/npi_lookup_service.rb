@@ -44,6 +44,9 @@ class NpiLookupService < ApplicationService
     enumeration_type = npi_data["enumeration_type"]
     basic = npi_data["basic"] || {}
 
+    # Extract common fields from basic data
+    extract_common_fields(basic, enumeration_type)
+
     case enumeration_type
     when "NPI-1"
       # Individual provider - use basic fields
@@ -51,6 +54,11 @@ class NpiLookupService < ApplicationService
       @user.last_name ||= basic["last_name"]
       @user.title ||= basic["credential"]
       @user.official_credentials ||= basic["credential"]
+      @user.middle_name ||= basic["middle_name"]
+      @user.gender ||= basic["sex"]
+      @user.name_prefix ||= basic["name_prefix"] unless basic["name_prefix"] == "--"
+      @user.name_suffix ||= basic["name_suffix"] unless basic["name_suffix"] == "--"
+      @user.sole_proprietor ||= parse_yes_no(basic["sole_proprietor"])
     when "NPI-2"
       # Organization - use authorized official fields
       @user.first_name ||= basic["authorized_official_first_name"]
@@ -58,10 +66,26 @@ class NpiLookupService < ApplicationService
       @user.phone ||= format_phone(basic["authorized_official_telephone_number"])
       @user.title ||= basic["authorized_official_title_or_position"]
       @user.official_credentials ||= basic["authorized_official_credential"]
+      @user.middle_name ||= basic["authorized_official_middle_name"]
+      @user.name_prefix ||= basic["authorized_official_name_prefix"] unless basic["authorized_official_name_prefix"] == "--"
+      @user.name_suffix ||= basic["authorized_official_name_suffix"] unless basic["authorized_official_name_suffix"] == "--"
+      @user.organizational_subpart ||= parse_yes_no(basic["organizational_subpart"])
     end
 
     # Extract addresses
     extract_addresses(npi_data["addresses"] || [])
+
+    # Extract taxonomies and identifiers
+    extract_taxonomies(npi_data["taxonomies"] || [])
+    extract_identifiers(npi_data["identifiers"] || [])
+  end
+
+  def extract_common_fields(basic, enumeration_type)
+    # Fields common to both NPI-1 and NPI-2
+    @user.enumeration_date ||= parse_date(basic["enumeration_date"])
+    @user.last_updated ||= parse_date(basic["last_updated"])
+    @user.certification_date ||= parse_date(basic["certification_date"])
+    @user.npi_status ||= basic["status"]
   end
 
   def extract_addresses(addresses)
@@ -103,5 +127,27 @@ class NpiLookupService < ApplicationService
     else
       phone_number
     end
+  end
+
+  def parse_date(date_string)
+    return nil if date_string.blank?
+    Date.parse(date_string)
+  rescue ArgumentError, TypeError
+    nil
+  end
+
+  def parse_yes_no(value)
+    return nil if value.blank?
+    value.to_s.upcase == "YES"
+  end
+
+  def extract_taxonomies(taxonomies_array)
+    return if taxonomies_array.blank?
+    @user.taxonomies = taxonomies_array
+  end
+
+  def extract_identifiers(identifiers_array)
+    return if identifiers_array.blank?
+    @user.identifiers = identifiers_array
   end
 end

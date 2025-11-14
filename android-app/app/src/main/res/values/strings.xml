@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MediVault</string>
+    <string name="scan_qr_code">Scan QR Code</string>
+    <string name="camera_permission_required">Camera permission is required for QR scanning</string>
+</resources>
