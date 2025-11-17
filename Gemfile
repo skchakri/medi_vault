@@ -36,7 +36,7 @@ gem "image_processing", "~> 1.12"
 
 # API & HTTP
 gem "httparty", "~> 0.21"
-gem "ruby-openai", "~> 6.3"
+gem "ruby-openai", "~> 8.3"
 gem "ruby_llm", "~> 1.8"
 
 # Rate Limiting
