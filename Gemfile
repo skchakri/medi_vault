@@ -64,8 +64,8 @@ gem "phonelib", "~> 0.8"
 gem "lockbox", "~> 1.3"
 
 # Monitoring (optional but recommended)
-gem "sentry-ruby", "~> 5.16", require: false
-gem "sentry-rails", "~> 5.16", require: false
+gem "sentry-ruby", "~> 6.1", require: false
+gem "sentry-rails", "~> 6.1", require: false
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ]
