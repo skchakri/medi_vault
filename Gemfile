@@ -45,6 +45,9 @@ gem "rack-attack", "~> 6.7"
 # SMS
 gem "twilio-ruby", "~> 6.9"
 
+# Payments
+gem "stripe", "~> 10.0"
+
 # Pagination
 gem "kaminari", "~> 1.2"
 

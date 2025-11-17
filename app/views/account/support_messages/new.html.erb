@@ -1,0 +1,58 @@
+<div class="min-h-screen bg-gray-50 pt-20">
+  <!-- Page Header -->
+  <div class="bg-white border-b border-gray-200 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-3">
+        <%= link_to account_support_messages_path, class: "text-gray-600 hover:text-gray-900" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        <% end %>
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">New Support Message</h1>
+          <p class="mt-2 text-gray-600">Send a message to our support team</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white rounded-lg shadow p-6">
+      <%= form_with model: @message, url: account_support_messages_path, local: true do |f| %>
+        <% if @message.errors.any? %>
+          <div class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+            <h3 class="text-red-800 font-medium mb-2">
+              <%= pluralize(@message.errors.count, "error") %> prohibited this message from being sent:
+            </h3>
+            <ul class="list-disc list-inside text-red-700 text-sm">
+              <% @message.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="mb-6">
+          <%= f.label :message, "Your Message", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.text_area :message, rows: 10, placeholder: "Describe your question or issue...", class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none" %>
+          <p class="mt-2 text-sm text-gray-500">Maximum 2000 characters. We typically respond within 24 hours.</p>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+          <h4 class="font-medium text-blue-900 mb-2">Before you send:</h4>
+          <ul class="text-sm text-blue-800 space-y-1">
+            <li>✓ Check our <a href="#" class="underline hover:text-blue-900">FAQ section</a> for common questions</li>
+            <li>✓ Include any relevant details (error messages, account issues, etc.)</li>
+            <li>✓ You'll receive email notifications when we respond</li>
+          </ul>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <%= link_to "Cancel", account_support_messages_path, class: "px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 font-medium" %>
+          <%= f.submit "Send Message", class: "px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 font-medium cursor-pointer" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

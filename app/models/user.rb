@@ -13,11 +13,15 @@ class User < ApplicationRecord
   has_many :notifications, dependent: :destroy
   has_many :share_links, through: :credentials
   has_many :llm_requests, dependent: :nullify
+  has_many :message_usages, dependent: :destroy
+  has_many :payments, dependent: :destroy
+  has_many :support_messages, dependent: :destroy
   has_one_attached :avatar
 
   # Enums
   enum :role, { user: 0, admin: 1 }
   enum :plan, { free: 0, basic: 1, pro: 2 }
+  enum :notification_preference, { both: 0, email_only: 1, sms_only: 2 }
 
   # Validations
   validates :first_name, :last_name, presence: true

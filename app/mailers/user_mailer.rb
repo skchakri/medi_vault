@@ -22,4 +22,18 @@ class UserMailer < ApplicationMailer
       )
     end
   end
+
+  def support_message_reply(user, reply_message)
+    @user = user
+    @reply = reply_message
+    @conversation_url = Rails.application.routes.url_helpers.account_support_message_url(
+      reply_message.root_message,
+      host: ENV.fetch('APP_HOST', 'localhost:3000')
+    )
+
+    mail(
+      to: @user.email,
+      subject: "Support Team has replied to your message"
+    )
+  end
 end

@@ -20,6 +20,9 @@
     <%# Includes Tailwind CSS %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
 
+    <%# Theme CSS Variables %>
+    <%= theme_css_variables %>
+
     <%# Tom-Select CSS %>
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
 
@@ -37,5 +40,10 @@
     <main class="<%= user_signed_in? ? 'container mx-auto mt-20 px-4 sm:px-6 lg:px-8 py-8' : '' %>">
       <%= yield %>
     </main>
+
+    <%# Chat widget for non-admin users %>
+    <% if user_signed_in? && !current_user.admin? %>
+      <%= render 'shared/chat_widget' %>
+    <% end %>
   </body>
 </html>

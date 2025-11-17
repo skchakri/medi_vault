@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background-color: #7E22CE; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+    .content { background-color: #fff; padding: 30px; border: 1px solid #e5e7eb; }
+    .user-info { background-color: #f3f4f6; padding: 15px; border-radius: 6px; margin: 20px 0; }
+    .message-box { background-color: #fef3c7; padding: 20px; border-left: 4px solid #f59e0b; margin: 20px 0; }
+    .button { display: inline-block; padding: 12px 24px; background-color: #7E22CE; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0; }
+    .footer { text-align: center; color: #6b7280; font-size: 12px; padding: 20px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>New Support Message</h1>
+    </div>
+    <div class="content">
+      <h2>Hello <%= @admin.first_name %>,</h2>
+
+      <p>A new support message has been received.</p>
+
+      <div class="user-info">
+        <p style="margin: 0;"><strong>From:</strong> <%= @user.full_name %></p>
+        <p style="margin: 5px 0 0 0;"><strong>Email:</strong> <%= @user.email %></p>
+        <p style="margin: 5px 0 0 0;"><strong>Plan:</strong> <%= @user.plan.humanize %></p>
+      </div>
+
+      <div class="message-box">
+        <p style="margin: 0; white-space: pre-wrap;"><%= @message.message %></p>
+      </div>
+
+      <p>Click the button below to view and respond to this message:</p>
+
+      <a href="<%= @conversation_url %>" class="button">View & Respond</a>
+
+      <p>Please respond to user inquiries within 24 hours.</p>
+    </div>
+    <div class="footer">
+      <p>MediVault Admin Notification</p>
+    </div>
+  </div>
+</body>
+</html>

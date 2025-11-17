@@ -1,0 +1,304 @@
+<div class="min-h-screen bg-gray-50 pt-20">
+  <!-- Page Header -->
+  <div class="bg-white border-b border-gray-200 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-3">
+        <%= link_to admin_root_path, class: "text-gray-600 hover:text-gray-900" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        <% end %>
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Integrations & Configuration</h1>
+          <p class="mt-2 text-gray-600">Setup and configure third-party services</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="space-y-6">
+      <!-- Stripe Payment Gateway -->
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-4">
+          <div class="flex items-center gap-3">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+            </svg>
+            <h2 class="text-2xl font-bold text-white">Stripe Payment Gateway</h2>
+          </div>
+        </div>
+        <div class="p-6">
+          <div class="prose max-w-none">
+            <p class="text-gray-700 mb-4">
+              Stripe is used for processing subscription payments, managing customer billing, and handling payment methods.
+            </p>
+
+            <h3 class="text-lg font-semibold text-gray-900 mt-6 mb-3">Setup Instructions:</h3>
+            <ol class="list-decimal list-inside space-y-3 text-gray-700">
+              <li>
+                <strong>Create a Stripe Account:</strong>
+                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                  <li>Go to <a href="https://dashboard.stripe.com/register" target="_blank" class="text-blue-600 hover:text-blue-700 underline">stripe.com</a> and create an account</li>
+                  <li>Complete business verification (required for live payments)</li>
+                </ul>
+              </li>
+              <li>
+                <strong>Get API Keys:</strong>
+                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                  <li>Navigate to <strong>Developers → API Keys</strong> in Stripe Dashboard</li>
+                  <li>Copy your <strong>Publishable key</strong> and <strong>Secret key</strong></li>
+                  <li>Use <strong>Test keys</strong> for development, <strong>Live keys</strong> for production</li>
+                </ul>
+              </li>
+              <li>
+                <strong>Configure Environment Variables:</strong>
+                <div class="bg-gray-900 text-green-400 p-4 rounded-lg mt-2 font-mono text-sm overflow-x-auto">
+# Add to .env file<br/>
+STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key_here<br/>
+STRIPE_SECRET_KEY=sk_test_your_secret_key_here<br/>
+STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
+                </div>
+              </li>
+              <li>
+                <strong>Setup Webhooks:</strong>
+                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                  <li>Go to <strong>Developers → Webhooks</strong> in Stripe Dashboard</li>
+                  <li>Add endpoint: <code class="bg-gray-100 px-2 py-1 rounded">https://yourdomain.com/webhooks/stripe</code></li>
+                  <li>Select events: <code class="bg-gray-100 px-2 py-1 rounded">payment_intent.succeeded</code>, <code class="bg-gray-100 px-2 py-1 rounded">customer.subscription.updated</code>, <code class="bg-gray-100 px-2 py-1 rounded">customer.subscription.deleted</code></li>
+                  <li>Copy the <strong>Webhook Signing Secret</strong></li>
+                </ul>
+              </li>
+              <li>
+                <strong>Create Products & Prices:</strong>
+                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                  <li>Go to <strong>Products</strong> in Stripe Dashboard</li>
+                  <li>Create products for: Basic Plan, Pro Plan</li>
+                  <li>Set up recurring prices (monthly/yearly)</li>
+                </ul>
+              </li>
+            </ol>
+
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+              <div class="flex items-start gap-2">
+                <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div class="text-sm text-blue-800">
+                  <p class="font-semibold">Important Notes:</p>
+                  <ul class="list-disc list-inside mt-1 space-y-1">
+                    <li>Never commit API keys to version control</li>
+                    <li>Use test mode during development</li>
+                    <li>Enable 3D Secure for added security</li>
+                    <li>Test webhooks using Stripe CLI: <code class="bg-blue-100 px-2 py-1 rounded">stripe listen --forward-to localhost:3000/webhooks/stripe</code></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OpenAI API -->
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-gradient-to-r from-green-600 to-teal-600 px-6 py-4">
+          <div class="flex items-center gap-3">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+            <h2 class="text-2xl font-bold text-white">OpenAI API</h2>
+          </div>
+        </div>
+        <div class="p-6">
+          <div class="prose max-w-none">
+            <p class="text-gray-700 mb-4">
+              OpenAI is used for AI-powered credential data extraction and intelligent document processing.
+            </p>
+
+            <h3 class="text-lg font-semibold text-gray-900 mt-6 mb-3">Setup Instructions:</h3>
+            <ol class="list-decimal list-inside space-y-3 text-gray-700">
+              <li>
+                <strong>Create OpenAI Account:</strong>
+                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                  <li>Go to <a href="https://platform.openai.com/signup" target="_blank" class="text-blue-600 hover:text-blue-700 underline">platform.openai.com</a></li>
+                  <li>Create an account and verify your email</li>
+                  <li>Add billing information (required for API access)</li>
+                </ul>
+              </li>
+              <li>
+                <strong>Get API Key:</strong>
+                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                  <li>Navigate to <strong>API Keys</strong> section</li>
+                  <li>Click <strong>"Create new secret key"</strong></li>
+                  <li>Copy the key immediately (it won't be shown again)</li>
+                  <li>Give it a descriptive name like "MediVault Production"</li>
+                </ul>
+              </li>
+              <li>
+                <strong>Configure Environment Variables:</strong>
+                <div class="bg-gray-900 text-green-400 p-4 rounded-lg mt-2 font-mono text-sm overflow-x-auto">
+# Add to .env file<br/>
+OPENAI_API_KEY=sk-proj-your_openai_api_key_here<br/>
+OPENAI_MODEL=gpt-4o-mini  # or gpt-4 for better accuracy
+                </div>
+              </li>
+              <li>
+                <strong>Set Usage Limits:</strong>
+                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                  <li>Go to <strong>Settings → Limits</strong></li>
+                  <li>Set monthly budget limits to prevent unexpected charges</li>
+                  <li>Enable email notifications for usage alerts</li>
+                </ul>
+              </li>
+              <li>
+                <strong>Choose the Right Model:</strong>
+                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                  <li><strong>gpt-4o-mini:</strong> Fast and cost-effective (~$0.15/1M tokens)</li>
+                  <li><strong>gpt-4:</strong> More accurate for complex documents (~$10/1M tokens)</li>
+                  <li><strong>gpt-3.5-turbo:</strong> Legacy, cheaper option (~$0.50/1M tokens)</li>
+                </ul>
+              </li>
+            </ol>
+
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-6">
+              <div class="flex items-start gap-2">
+                <svg class="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <div class="text-sm text-yellow-800">
+                  <p class="font-semibold">Cost Management Tips:</p>
+                  <ul class="list-disc list-inside mt-1 space-y-1">
+                    <li>Monitor usage in OpenAI Dashboard regularly</li>
+                    <li>Implement caching for repeated extractions</li>
+                    <li>Use gpt-4o-mini for most cases, gpt-4 only when needed</li>
+                    <li>Set up usage alerts at 50%, 75%, and 90% of budget</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Google OAuth -->
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-gradient-to-r from-red-600 to-orange-600 px-6 py-4">
+          <div class="flex items-center gap-3">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+            </svg>
+            <h2 class="text-2xl font-bold text-white">Google OAuth 2.0</h2>
+          </div>
+        </div>
+        <div class="p-6">
+          <div class="prose max-w-none">
+            <p class="text-gray-700 mb-4">
+              Google OAuth allows users to sign in with their Google accounts for seamless authentication.
+            </p>
+
+            <h3 class="text-lg font-semibold text-gray-900 mt-6 mb-3">Setup Instructions:</h3>
+            <ol class="list-decimal list-inside space-y-3 text-gray-700">
+              <li>
+                <strong>Create Google Cloud Project:</strong>
+                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                  <li>Go to <a href="https://console.cloud.google.com" target="_blank" class="text-blue-600 hover:text-blue-700 underline">Google Cloud Console</a></li>
+                  <li>Click <strong>"Create Project"</strong> and name it "MediVault"</li>
+                  <li>Select the project once created</li>
+                </ul>
+              </li>
+              <li>
+                <strong>Enable Google+ API:</strong>
+                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                  <li>Go to <strong>APIs & Services → Library</strong></li>
+                  <li>Search for <strong>"Google+ API"</strong> or <strong>"Google Identity"</strong></li>
+                  <li>Click <strong>"Enable"</strong></li>
+                </ul>
+              </li>
+              <li>
+                <strong>Configure OAuth Consent Screen:</strong>
+                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                  <li>Go to <strong>APIs & Services → OAuth consent screen</strong></li>
+                  <li>Choose <strong>"External"</strong> user type</li>
+                  <li>Fill in app name: <strong>"MediVault"</strong></li>
+                  <li>Add support email and developer contact</li>
+                  <li>Add scopes: <code class="bg-gray-100 px-2 py-1 rounded">email</code>, <code class="bg-gray-100 px-2 py-1 rounded">profile</code>, <code class="bg-gray-100 px-2 py-1 rounded">openid</code></li>
+                </ul>
+              </li>
+              <li>
+                <strong>Create OAuth Credentials:</strong>
+                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                  <li>Go to <strong>APIs & Services → Credentials</strong></li>
+                  <li>Click <strong>"Create Credentials" → "OAuth client ID"</strong></li>
+                  <li>Application type: <strong>"Web application"</strong></li>
+                  <li>Name: <strong>"MediVault Web App"</strong></li>
+                  <li>Authorized JavaScript origins: <code class="bg-gray-100 px-2 py-1 rounded">http://localhost:3000</code>, <code class="bg-gray-100 px-2 py-1 rounded">https://yourdomain.com</code></li>
+                  <li>Authorized redirect URIs: <code class="bg-gray-100 px-2 py-1 rounded">http://localhost:3000/users/auth/google_oauth2/callback</code>, <code class="bg-gray-100 px-2 py-1 rounded">https://yourdomain.com/users/auth/google_oauth2/callback</code></li>
+                </ul>
+              </li>
+              <li>
+                <strong>Configure Environment Variables:</strong>
+                <div class="bg-gray-900 text-green-400 p-4 rounded-lg mt-2 font-mono text-sm overflow-x-auto">
+# Add to .env file<br/>
+GOOGLE_CLIENT_ID=your_client_id_here.apps.googleusercontent.com<br/>
+GOOGLE_CLIENT_SECRET=your_client_secret_here
+                </div>
+              </li>
+              <li>
+                <strong>Verify Configuration:</strong>
+                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                  <li>The callback URL in Devise should match: <code class="bg-gray-100 px-2 py-1 rounded">config/initializers/devise.rb</code></li>
+                  <li>Test sign-in on localhost before deploying</li>
+                  <li>Update redirect URIs when deploying to production</li>
+                </ul>
+              </li>
+            </ol>
+
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4 mt-6">
+              <div class="flex items-start gap-2">
+                <svg class="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div class="text-sm text-green-800">
+                  <p class="font-semibold">Best Practices:</p>
+                  <ul class="list-disc list-inside mt-1 space-y-1">
+                    <li>Keep credentials secure and never commit to version control</li>
+                    <li>Use different projects for development and production</li>
+                    <li>Regularly review authorized apps in <a href="https://myaccount.google.com/permissions" target="_blank" class="underline">Google Account Security</a></li>
+                    <li>Monitor OAuth logs for suspicious activity</li>
+                    <li>Submit for verification if app will have >100 users</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Resources -->
+      <div class="bg-gradient-to-br from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-3">Additional Resources</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <a href="https://stripe.com/docs" target="_blank" class="flex items-center gap-2 text-blue-600 hover:text-blue-700">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            Stripe Documentation
+          </a>
+          <a href="https://platform.openai.com/docs" target="_blank" class="flex items-center gap-2 text-blue-600 hover:text-blue-700">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            OpenAI Documentation
+          </a>
+          <a href="https://developers.google.com/identity/protocols/oauth2" target="_blank" class="flex items-center gap-2 text-blue-600 hover:text-blue-700">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            Google OAuth Docs
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

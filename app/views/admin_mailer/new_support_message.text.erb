@@ -1,0 +1,19 @@
+Hello <%= @admin.first_name %>,
+
+A new support message has been received.
+
+From: <%= @user.full_name %>
+Email: <%= @user.email %>
+Plan: <%= @user.plan.humanize %>
+
+================================================================================
+<%= @message.message %>
+================================================================================
+
+View and respond to this message here:
+<%= @conversation_url %>
+
+Please respond to user inquiries within 24 hours.
+
+---
+MediVault Admin Notification

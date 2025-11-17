@@ -48,7 +48,7 @@ module Admin
     end
 
     def email_template_params
-      params.require(:email_template).permit(:name, :template_type, :subject, :html_body, :text_body, :active, variables: {})
+      params.require(:email_template).permit(:name, :template_type, :subject, :html_body, :text_body, :sms_body, :active, variables: {})
     end
   end
 end

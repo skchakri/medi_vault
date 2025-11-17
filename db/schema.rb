@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_14_190851) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_17_015829) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -129,6 +129,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_14_190851) do
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "sms_body"
     t.index ["name"], name: "index_email_templates_on_name", unique: true
     t.index ["template_type", "active"], name: "index_email_templates_on_template_type_and_active"
   end
@@ -154,6 +155,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_14_190851) do
     t.index ["user_id"], name: "index_llm_requests_on_user_id"
   end
 
+  create_table "message_usages", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "message_type", null: false
+    t.datetime "sent_at"
+    t.integer "status", default: 0, null: false
+    t.integer "cost_cents", default: 0
+    t.string "provider"
+    t.text "error_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["message_type", "sent_at"], name: "index_message_usages_on_message_type_and_sent_at"
+    t.index ["status"], name: "index_message_usages_on_status"
+    t.index ["user_id", "sent_at"], name: "index_message_usages_on_user_id_and_sent_at"
+    t.index ["user_id"], name: "index_message_usages_on_user_id"
+  end
+
   create_table "notifications", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "credential_id"
@@ -173,6 +190,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_14_190851) do
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
+  create_table "payments", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "stripe_payment_intent_id"
+    t.integer "amount_cents", null: false
+    t.string "currency", default: "usd", null: false
+    t.integer "status", default: 0, null: false
+    t.text "description"
+    t.datetime "paid_at"
+    t.text "receipt_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["status"], name: "index_payments_on_status"
+    t.index ["stripe_payment_intent_id"], name: "index_payments_on_stripe_payment_intent_id", unique: true
+    t.index ["user_id", "paid_at"], name: "index_payments_on_user_id_and_paid_at"
+    t.index ["user_id"], name: "index_payments_on_user_id"
+  end
+
   create_table "share_links", force: :cascade do |t|
     t.bigint "credential_id", null: false
     t.string "token", null: false
@@ -184,6 +218,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_14_190851) do
     t.index ["credential_id"], name: "index_share_links_on_credential_id"
     t.index ["expires_at"], name: "index_share_links_on_expires_at"
     t.index ["token"], name: "index_share_links_on_token", unique: true
+  end
+
+  create_table "short_urls", force: :cascade do |t|
+    t.string "token", null: false
+    t.text "original_url", null: false
+    t.integer "click_count", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["token"], name: "index_short_urls_on_token", unique: true
+  end
+
+  create_table "support_messages", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.text "message"
+    t.boolean "is_admin_response"
+    t.integer "parent_id"
+    t.datetime "read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_support_messages_on_user_id"
   end
 
   create_table "tags", force: :cascade do |t|
@@ -202,6 +256,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_14_190851) do
     t.index ["name"], name: "index_tags_on_name", unique: true
     t.index ["usage_count"], name: "index_tags_on_usage_count"
     t.index ["user_id"], name: "index_tags_on_user_id"
+  end
+
+  create_table "theme_settings", force: :cascade do |t|
+    t.string "primary_color", default: "#7E22CE", null: false
+    t.string "secondary_color", default: "#9333EA", null: false
+    t.string "font_family", default: "system", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -262,6 +324,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_14_190851) do
     t.boolean "organizational_subpart"
     t.jsonb "taxonomies"
     t.jsonb "identifiers"
+    t.integer "notification_preference", default: 0, null: false
+    t.string "stripe_customer_id"
+    t.string "payment_method_last4"
+    t.string "payment_method_brand"
+    t.date "payment_method_expires_at"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["npi"], name: "index_users_on_npi"
@@ -281,8 +348,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_14_190851) do
   add_foreign_key "credential_tags", "tags"
   add_foreign_key "credentials", "users"
   add_foreign_key "llm_requests", "users"
+  add_foreign_key "message_usages", "users"
   add_foreign_key "notifications", "credentials"
   add_foreign_key "notifications", "users"
+  add_foreign_key "payments", "users"
   add_foreign_key "share_links", "credentials"
+  add_foreign_key "support_messages", "users"
   add_foreign_key "tags", "users"
 end

@@ -13,15 +13,14 @@ class AlertDispatcherJob < ApplicationJob
     user = alert.user
     credential = alert.credential
 
-    # Send email notification
-    if user.notification_email
+    # Send email notification (based on user preference)
+    if user.notification_email && (user.both? || user.email_only?)
       notification = create_notification(alert, user, :email)
-      AlertMailer.expiration_alert(alert, user, credential).deliver_later(queue: :mailers)
-      notification.mark_as_sent!
+      EmailNotificationJob.perform_later(notification.id)
     end
 
-    # Send SMS notification (Pro plan only)
-    if user.can_use_sms? && user.notification_sms
+    # Send SMS notification (Pro plan only, based on user preference)
+    if user.can_use_sms? && user.notification_sms && (user.both? || user.sms_only?)
       notification = create_notification(alert, user, :sms)
       SmsNotificationJob.perform_later(notification.id)
     end

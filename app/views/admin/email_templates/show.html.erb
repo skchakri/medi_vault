@@ -10,7 +10,7 @@
         <% end %>
         <div>
           <h1 class="text-3xl font-bold text-gray-900"><%= @email_template.name %></h1>
-          <p class="mt-2 text-gray-600"><%= @email_template.template_type.humanize %></p>
+          <p class="mt-2 text-gray-600"><%= @email_template.template_type&.humanize || 'Custom Template' %></p>
         </div>
       </div>
       <div class="flex gap-2">
@@ -37,7 +37,7 @@
 
             <div>
               <p class="text-sm text-gray-600">Type</p>
-              <p class="text-sm font-medium text-gray-900"><%= @email_template.template_type.humanize %></p>
+              <p class="text-sm font-medium text-gray-900"><%= @email_template.template_type&.humanize || 'Custom Template' %></p>
             </div>
 
             <div>
@@ -102,6 +102,58 @@
               <h3 class="text-lg font-semibold text-gray-900 mb-4">Plain Text Version</h3>
               <div class="bg-gray-50 p-4 rounded border border-gray-200">
                 <pre class="text-sm text-gray-700 font-mono whitespace-pre-wrap"><%= @email_template.text_body %></pre>
+              </div>
+            </div>
+          <% end %>
+
+          <!-- SMS Template -->
+          <% if @email_template.sms_body.present? %>
+            <div class="bg-white rounded-lg shadow p-6">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">SMS Template</h3>
+                <span class="px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                  <%= @email_template.sms_body.length %> / 320 characters
+                </span>
+              </div>
+              <div class="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-lg border border-blue-200">
+                <div class="flex items-start gap-3">
+                  <div class="flex-shrink-0">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-sm text-gray-700 font-medium mb-2">MediVault</p>
+                    <p class="text-sm text-gray-900 whitespace-pre-wrap"><%= @email_template.sms_body %></p>
+                    <p class="text-xs text-gray-500 mt-3"><%= Time.current.strftime("%I:%M %p") %></p>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <div class="flex items-start gap-2">
+                  <svg class="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <div class="text-sm text-yellow-800">
+                    <p class="font-medium">SMS Delivery Notes:</p>
+                    <ul class="list-disc list-inside mt-1 space-y-1">
+                      <li>SMS messages are limited to 320 characters (2 segments)</li>
+                      <li>Only sent to Pro plan users with verified phone numbers</li>
+                      <li>Cost: ~$0.0075 per segment</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% else %>
+            <div class="bg-white rounded-lg shadow p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">SMS Template</h3>
+              <div class="bg-gray-50 p-8 rounded-lg border-2 border-dashed border-gray-300 text-center">
+                <svg class="w-12 h-12 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+                <p class="text-gray-600 font-medium">No SMS template configured</p>
+                <p class="text-sm text-gray-500 mt-1">Add an SMS version when editing this template</p>
               </div>
             </div>
           <% end %>

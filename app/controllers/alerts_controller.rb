@@ -10,6 +10,11 @@ class AlertsController < ApplicationController
                          .order(alert_date: :asc)
                          .page(params[:page])
                          .per(20)
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
 
   def create

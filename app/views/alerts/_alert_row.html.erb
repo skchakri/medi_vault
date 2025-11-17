@@ -1,0 +1,43 @@
+<tr class="hover:bg-gray-50 transition">
+  <td class="px-6 py-4">
+    <div class="flex items-center">
+      <div class="flex-shrink-0 h-10 w-10 bg-purple-100 rounded-lg flex items-center justify-center">
+        <svg class="h-6 w-6 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      </div>
+      <div class="ml-4">
+        <%= link_to alert.credential, class: "text-sm font-medium text-gray-900 hover:text-purple-600 transition" do %>
+          <%= alert.credential.title %>
+        <% end %>
+        <div class="text-xs text-gray-500">
+          Expires <%= alert.credential.end_date.strftime("%b %d, %Y") %>
+        </div>
+      </div>
+    </div>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap">
+    <div class="text-sm text-gray-900"><%= alert.alert_date.strftime("%b %d, %Y") %></div>
+    <% if alert.alert_date < Date.today %>
+      <div class="text-xs text-red-600">Past due</div>
+    <% elsif alert.alert_date == Date.today %>
+      <div class="text-xs text-yellow-600">Today</div>
+    <% else %>
+      <div class="text-xs text-gray-500"><%= (alert.alert_date - Date.today).to_i %> days away</div>
+    <% end %>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+    <%= alert.offset_days %> days
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap">
+    <%= render 'shared/status_badge', status: alert.status %>
+  </td>
+  <td class="px-6 py-4">
+    <div class="text-sm text-gray-900 max-w-xs truncate">
+      <%= alert.formatted_message %>
+    </div>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+    <%= button_to "Delete", alert_path(alert), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-900 transition" %>
+  </td>
+</tr>

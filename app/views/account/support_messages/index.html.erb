@@ -1,0 +1,102 @@
+<div class="min-h-screen bg-gray-50 pt-20">
+  <!-- Page Header -->
+  <div class="bg-white border-b border-gray-200 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Support Messages</h1>
+          <p class="mt-2 text-gray-600">Chat with our support team</p>
+        </div>
+        <%= link_to new_account_support_message_path, class: "px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 font-medium" do %>
+          <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          New Message
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <% if @unread_count > 0 %>
+      <div class="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <p class="text-blue-800">
+          <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          You have <%= pluralize(@unread_count, 'unread reply', 'unread replies') %>
+        </p>
+      </div>
+    <% end %>
+
+    <% if @conversations.any? %>
+      <div class="bg-white rounded-lg shadow">
+        <div class="divide-y divide-gray-200">
+          <% @conversations.each do |conversation| %>
+            <%= link_to account_support_message_path(conversation), class: "block hover:bg-gray-50 transition-colors" do %>
+              <div class="p-6">
+                <div class="flex items-start justify-between">
+                  <div class="flex-1">
+                    <div class="flex items-center gap-3">
+                      <h3 class="text-lg font-medium text-gray-900">
+                        <%= conversation.conversation_preview %>
+                      </h3>
+                      <% if conversation.replies.any? { |r| r.is_admin_response? && r.unread? } %>
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">
+                          New Reply
+                        </span>
+                      <% end %>
+                    </div>
+                    <p class="mt-1 text-sm text-gray-500">
+                      Started <%= time_ago_in_words(conversation.created_at) %> ago
+                    </p>
+                    <% if conversation.replies.any? %>
+                      <p class="mt-2 text-sm text-gray-600">
+                        <% last_reply = conversation.replies.order(created_at: :desc).first %>
+                        <% if last_reply.is_admin_response? %>
+                          <span class="font-medium text-purple-600">Support Team:</span>
+                        <% else %>
+                          <span class="font-medium">You:</span>
+                        <% end %>
+                        <%= truncate(last_reply.message, length: 100) %>
+                      </p>
+                    <% end %>
+                  </div>
+                  <div class="ml-4 flex-shrink-0">
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="mt-3 flex items-center gap-4 text-xs text-gray-500">
+                  <span class="flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    <%= pluralize(conversation.replies.count + 1, 'message') %>
+                  </span>
+                  <span>Last activity <%= time_ago_in_words(conversation.replies.maximum(:created_at) || conversation.created_at) %> ago</span>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="mt-6">
+        <%= paginate @conversations %>
+      </div>
+    <% else %>
+      <div class="bg-white rounded-lg shadow p-12 text-center">
+        <svg class="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+        <h3 class="mt-4 text-lg font-medium text-gray-900">No messages yet</h3>
+        <p class="mt-2 text-gray-500">Start a conversation with our support team</p>
+        <%= link_to "Send Your First Message", new_account_support_message_path, class: "mt-6 inline-block px-6 py-3 bg-purple-600 text-white rounded-md hover:bg-purple-700 font-medium" %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  # Short URL redirects (must be public)
+  get "s/:token", to: "short_urls#show", as: :short_url
+
   # Devise routes
   devise_for :users, controllers: {
     omniauth_callbacks: "users/omniauth_callbacks",
@@ -49,7 +52,15 @@ Rails.application.routes.draw do
         post :verify_npi, on: :collection
       end
       resource :subscription, only: [:show, :update]
+      resources :payments, only: [:index]
+      resources :support_messages, only: [:index, :show, :new, :create]
+      post 'checkout', to: 'checkout#create'
     end
+  end
+
+  # Stripe webhooks (must be public, outside authentication)
+  namespace :webhooks do
+    post 'stripe', to: 'stripe#create'
   end
 
   # Public share link access
@@ -63,6 +74,18 @@ Rails.application.routes.draw do
   # Admin routes
   namespace :admin do
     root "dashboard#index"
+
+    resource :theme_settings, only: [:edit, :update] do
+      post :apply_defaults, on: :collection
+    end
+    resources :message_usage, only: [:index]
+    resources :integrations, only: [:index]
+
+    resources :support_messages, only: [:index, :show] do
+      member do
+        post :reply
+      end
+    end
 
     resources :users do
       member do

@@ -1,0 +1,148 @@
+<div class="min-h-screen bg-gray-50 pt-20">
+  <!-- Page Header -->
+  <div class="bg-white border-b border-gray-200 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-3">
+        <%= link_to admin_root_path, class: "text-gray-600 hover:text-gray-900" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        <% end %>
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Theme Settings</h1>
+          <p class="mt-2 text-gray-600">Customize the look and feel of your application</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="bg-white rounded-lg shadow p-8">
+      <%= form_with model: @theme_setting, url: admin_theme_settings_path, method: :patch, local: true, html: { multipart: true } do |form| %>
+        <% if @theme_setting.errors.any? %>
+          <div class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+            <h3 class="font-semibold mb-2"><%= pluralize(@theme_setting.errors.count, "error") %> prohibited this from being saved:</h3>
+            <ul class="list-disc list-inside">
+              <% @theme_setting.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <!-- Logo Upload Section -->
+        <div class="mb-8 pb-8 border-b border-gray-200">
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Logo</h2>
+
+          <% if @theme_setting.logo.attached? %>
+            <div class="mb-4">
+              <p class="text-sm text-gray-600 mb-2">Current logo:</p>
+              <%= image_tag @theme_setting.logo, class: "h-20 object-contain border border-gray-200 rounded-md p-2 bg-white" %>
+            </div>
+          <% end %>
+
+          <div class="space-y-2">
+            <%= form.label :logo, "Upload Logo (PNG, JPG, SVG)", class: "block text-sm font-medium text-gray-700" %>
+            <%= form.file_field :logo, accept: "image/*", class: "block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500" %>
+            <p class="text-sm text-gray-500">Recommended: SVG or PNG with transparent background, max 200x80px</p>
+          </div>
+        </div>
+
+        <!-- Color Settings Section -->
+        <div class="mb-8 pb-8 border-b border-gray-200">
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Colors</h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Primary Color -->
+            <div class="space-y-2">
+              <%= form.label :primary_color, "Primary Color", class: "block text-sm font-medium text-gray-700" %>
+              <div class="flex items-center gap-3">
+                <%= form.color_field :primary_color, class: "h-12 w-20 rounded-md border border-gray-300 cursor-pointer" %>
+                <%= form.text_field :primary_color, placeholder: "#7E22CE", class: "flex-1 px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500" %>
+              </div>
+              <p class="text-sm text-gray-500">Used for buttons, links, and primary actions</p>
+            </div>
+
+            <!-- Secondary Color -->
+            <div class="space-y-2">
+              <%= form.label :secondary_color, "Secondary Color", class: "block text-sm font-medium text-gray-700" %>
+              <div class="flex items-center gap-3">
+                <%= form.color_field :secondary_color, class: "h-12 w-20 rounded-md border border-gray-300 cursor-pointer" %>
+                <%= form.text_field :secondary_color, placeholder: "#9333EA", class: "flex-1 px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500" %>
+              </div>
+              <p class="text-sm text-gray-500">Used for secondary elements and highlights</p>
+            </div>
+          </div>
+
+          <!-- Color Preview -->
+          <div class="mt-6 p-4 bg-gray-50 rounded-md">
+            <p class="text-sm font-medium text-gray-700 mb-3">Preview:</p>
+            <div class="flex flex-wrap gap-3">
+              <button type="button" class="px-6 py-2 rounded-md text-white font-medium" style="background-color: <%= @theme_setting.primary_color %>">
+                Primary Button
+              </button>
+              <button type="button" class="px-6 py-2 rounded-md text-white font-medium" style="background-color: <%= @theme_setting.secondary_color %>">
+                Secondary Button
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Font Settings Section -->
+        <div class="mb-8">
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Typography</h2>
+
+          <div class="space-y-2">
+            <%= form.label :font_family, "Font Family", class: "block text-sm font-medium text-gray-700" %>
+            <%= form.select :font_family,
+                [
+                  ['System Default', 'system'],
+                  ['Arial', 'arial'],
+                  ['Helvetica', 'helvetica'],
+                  ['Georgia', 'georgia'],
+                  ['Times New Roman', 'times'],
+                  ['Courier', 'courier'],
+                  ['Verdana', 'verdana']
+                ],
+                {},
+                class: "block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500" %>
+            <p class="text-sm text-gray-500">Choose the primary font for the application</p>
+          </div>
+
+          <!-- Font Preview -->
+          <div class="mt-4 p-4 bg-gray-50 rounded-md">
+            <p class="text-sm font-medium text-gray-700 mb-2">Preview:</p>
+            <p class="text-lg" style="font-family: <%= @theme_setting.font_family %>">
+              The quick brown fox jumps over the lazy dog
+            </p>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+          <div class="flex items-center gap-4">
+            <%= link_to "Cancel", admin_root_path, class: "px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 font-medium" %>
+            <%= button_to "Apply Defaults", apply_defaults_admin_theme_settings_path, method: :post,
+                class: "px-6 py-2 border border-orange-300 bg-orange-50 text-orange-700 rounded-md hover:bg-orange-100 font-medium",
+                form: { data: { turbo_confirm: "Are you sure? This will reset logo, colors, and font to default values." } } %>
+          </div>
+          <%= form.submit "Save Theme Settings", class: "px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 font-medium cursor-pointer" %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Info Box -->
+    <div class="mt-6 bg-blue-50 border border-blue-200 rounded-md p-4">
+      <div class="flex gap-3">
+        <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <div class="text-sm text-blue-800">
+          <p class="font-medium mb-1">Note:</p>
+          <p>Changes to theme settings will be reflected across the entire application, including the web interface and mobile apps. Users may need to refresh their browser to see the changes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

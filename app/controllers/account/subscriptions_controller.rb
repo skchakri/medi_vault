@@ -5,6 +5,13 @@ module Account
     def show
       @user = current_user
       @plan_limits = plan_limits
+
+      # Handle Stripe checkout callbacks
+      if params[:success] == 'true'
+        flash.now[:notice] = "Payment successful! Your subscription has been activated."
+      elsif params[:canceled] == 'true'
+        flash.now[:alert] = "Payment was canceled. Your subscription was not updated."
+      end
     end
 
     def update

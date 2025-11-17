@@ -3,8 +3,8 @@
   <div class="bg-white border-b border-gray-200 py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900">Email Templates</h1>
-        <p class="mt-2 text-gray-600">Manage system email templates and customize content</p>
+        <h1 class="text-3xl font-bold text-gray-900">Notification Templates</h1>
+        <p class="mt-2 text-gray-600">Manage email and SMS notification templates</p>
       </div>
       <%= link_to "Create Template", new_admin_email_template_path, class: "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition" %>
     </div>
@@ -58,8 +58,8 @@
         <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
         </svg>
-        <h3 class="text-lg font-medium text-gray-900">No email templates</h3>
-        <p class="text-gray-600 mt-2">Create your first email template to get started</p>
+        <h3 class="text-lg font-medium text-gray-900">No notification templates</h3>
+        <p class="text-gray-600 mt-2">Create your first notification template to get started</p>
         <%= link_to "Create Template", new_admin_email_template_path, class: "inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition" %>
       </div>
     <% end %>

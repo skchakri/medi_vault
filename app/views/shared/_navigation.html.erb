@@ -25,6 +25,16 @@
 
             <%= link_to "Email Templates", admin_email_templates_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(admin_email_templates_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
 
+            <%= link_to admin_support_messages_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(admin_support_messages_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" do %>
+              Questions
+              <% unanswered_count = SupportMessage.root_messages.left_joins(:replies).where(replies_support_messages: { id: nil }).count %>
+              <% if unanswered_count > 0 %>
+                <span class="ml-1 px-1.5 py-0.5 text-xs font-semibold rounded-full bg-green-500 text-white"><%= unanswered_count %></span>
+              <% end %>
+            <% end %>
+
+            <%= link_to "Theme", edit_admin_theme_settings_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(edit_admin_theme_settings_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
+
             <%= link_to "Settings", admin_settings_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(admin_settings_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
           <% else %>
             <%= link_to "Dashboard", authenticated_root_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(authenticated_root_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
@@ -32,6 +42,8 @@
             <%= link_to "Credentials", credentials_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(credentials_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
 
             <%= link_to "Alerts", alerts_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(alerts_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
+
+            <%= link_to "Support", account_support_messages_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(account_support_messages_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
           <% end %>
         </div>
       </div>
@@ -71,6 +83,15 @@
               <%= link_to account_subscription_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition" do %>
                 <span>Subscription</span>
               <% end %>
+              <%= link_to account_support_messages_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition" do %>
+                <div class="flex items-center justify-between">
+                  <span>Support</span>
+                  <% unread_count = SupportMessage.unread_count_for_user(current_user) %>
+                  <% if unread_count > 0 %>
+                    <span class="ml-2 px-2 py-0.5 text-xs font-semibold rounded-full bg-red-100 text-red-800"><%= unread_count %></span>
+                  <% end %>
+                </div>
+              <% end %>
             </div>
             <div class="py-1">
               <%= button_to destroy_user_session_path, method: :delete, class: "block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition" do %>
@@ -104,6 +125,18 @@
 
           <%= link_to "Email Templates", admin_email_templates_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(admin_email_templates_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
 
+          <%= link_to admin_support_messages_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(admin_support_messages_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" do %>
+            <div class="flex items-center justify-between">
+              <span>Questions</span>
+              <% unanswered_count = SupportMessage.root_messages.left_joins(:replies).where(replies_support_messages: { id: nil }).count %>
+              <% if unanswered_count > 0 %>
+                <span class="ml-2 px-2 py-0.5 text-xs font-semibold rounded-full bg-green-500 text-white"><%= unanswered_count %></span>
+              <% end %>
+            </div>
+          <% end %>
+
+          <%= link_to "Theme", edit_admin_theme_settings_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(edit_admin_theme_settings_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
+
           <%= link_to "Settings", admin_settings_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(admin_settings_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
         <% else %>
           <%= link_to "Dashboard", authenticated_root_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(authenticated_root_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
@@ -111,6 +144,8 @@
           <%= link_to "Credentials", credentials_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(credentials_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
 
           <%= link_to "Alerts", alerts_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(alerts_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
+
+          <%= link_to "Support", account_support_messages_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(account_support_messages_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
         <% end %>
       </div>
     </div>
