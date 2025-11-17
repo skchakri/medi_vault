@@ -80,7 +80,7 @@ end
 group :development do
   gem "web-console"
   gem "letter_opener", "~> 1.9"
-  gem "letter_opener_web", "~> 2.0"
+  gem "letter_opener_web", "~> 3.0"
   # gem "annotate", "~> 3.2" # Not compatible with Rails 8 yet
   # gem "bullet", "~> 7.1" # Not compatible with Rails 8 yet
 end
