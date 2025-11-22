@@ -66,7 +66,7 @@ module Admin
 
       # Send notification based on user preference
       if user.notification_email && (user.both? || user.email_only?)
-        UserMailer.support_message_reply(user, reply).deliver_later
+        SendSupportReplyEmailJob.perform_later(user.id, reply.id)
       end
 
       # Note: SMS notification can be added here if needed

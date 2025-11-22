@@ -221,7 +221,7 @@ class User < ApplicationRecord
   end
 
   def send_welcome_email
-    UserMailer.welcome_email(self).deliver_later
+    SendWelcomeEmailJob.perform_later(id)
   end
 
   def phone_number_valid

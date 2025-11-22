@@ -17,6 +17,10 @@
           <% if current_user.admin? %>
             <%= link_to "Dashboard", admin_root_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(admin_root_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
 
+            <%= link_to "Workflows", admin_workflows_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(admin_workflows_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
+
+            <%= link_to "AI Models", admin_ai_models_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(admin_ai_models_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
+
             <%= link_to "Users", admin_users_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(admin_users_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
 
             <%= link_to "Alert Configuration", admin_alert_types_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(admin_alert_types_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
@@ -116,6 +120,10 @@
       <div class="pt-2 pb-3 space-y-1">
         <% if current_user.admin? %>
           <%= link_to "Dashboard", admin_root_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(admin_root_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
+
+          <%= link_to "Workflows", admin_workflows_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(admin_workflows_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
+
+          <%= link_to "AI Models", admin_ai_models_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(admin_ai_models_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
 
           <%= link_to "Users", admin_users_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(admin_users_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
 

@@ -99,6 +99,12 @@ Rails.application.routes.draw do
     resource :settings, only: [:show, :update]
     resources :email_templates
     resources :llm_requests, only: [:index, :show]
+    resources :workflows
+    resources :ai_models do
+      member do
+        post :set_default
+      end
+    end
 
     get "reports", to: "reports#index"
     get "reports/users", to: "reports#users"

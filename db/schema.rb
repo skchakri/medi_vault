@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_17_015829) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_19_065719) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,35 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_17_015829) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "ai_embeddings", force: :cascade do |t|
+    t.string "provider", null: false
+    t.string "model", null: false
+    t.jsonb "vector", default: [], null: false
+    t.integer "dim", null: false
+    t.string "source_type"
+    t.bigint "source_id"
+    t.string "chunk_id"
+    t.jsonb "metadata", default: {}, null: false
+    t.integer "cost_cents", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["model"], name: "index_ai_embeddings_on_model"
+    t.index ["provider"], name: "index_ai_embeddings_on_provider"
+    t.index ["source_type", "source_id"], name: "index_ai_embeddings_on_source_type_and_source_id"
+  end
+
+  create_table "ai_models", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "provider", null: false
+    t.string "model_identifier", null: false
+    t.boolean "is_default", default: false, null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_ai_models_on_active"
+    t.index ["is_default"], name: "index_ai_models_on_is_default"
   end
 
   create_table "alert_types", force: :cascade do |t|
@@ -340,6 +369,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_17_015829) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
+  create_table "workflows", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.jsonb "nodes", default: [], null: false
+    t.jsonb "edges", default: [], null: false
+    t.string "status", default: "draft", null: false
+    t.bigint "created_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_workflows_on_created_by_id"
+    t.index ["name"], name: "index_workflows_on_name"
+    t.index ["status"], name: "index_workflows_on_status"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "alerts", "alert_types"
@@ -355,4 +398,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_17_015829) do
   add_foreign_key "share_links", "credentials"
   add_foreign_key "support_messages", "users"
   add_foreign_key "tags", "users"
+  add_foreign_key "workflows", "users", column: "created_by_id"
 end

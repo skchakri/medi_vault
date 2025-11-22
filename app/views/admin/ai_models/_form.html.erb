@@ -1,0 +1,90 @@
+<%= form_with model: [:admin, ai_model], class: "space-y-6" do |form| %>
+  <% if ai_model.errors.any? %>
+    <div class="rounded-md bg-red-50 p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800">
+            <%= pluralize(ai_model.errors.count, "error") %> prohibited this AI model from being saved:
+          </h3>
+          <div class="mt-2 text-sm text-red-700">
+            <ul class="list-disc list-inside space-y-1">
+              <% ai_model.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Name Field -->
+  <div>
+    <%= form.label :name, "Model Name", class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.text_field :name,
+        placeholder: "e.g., GPT-4o Mini",
+        class: "block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500 text-base",
+        required: true %>
+    <p class="mt-1 text-sm text-gray-500">A friendly name to identify this model</p>
+  </div>
+
+  <!-- Provider Field -->
+  <div>
+    <%= form.label :provider, "Provider", class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.select :provider,
+        options_for_select(AiModel::PROVIDERS.map { |p| [p.titleize, p] }, ai_model.provider),
+        { include_blank: "Select a provider" },
+        class: "block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500 text-base",
+        required: true %>
+    <p class="mt-1 text-sm text-gray-500">The LLM provider (OpenAI, Ollama, etc.)</p>
+  </div>
+
+  <!-- Model Identifier Field -->
+  <div>
+    <%= form.label :model_identifier, "Model Identifier", class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.text_field :model_identifier,
+        placeholder: "e.g., gpt-4o-mini, llama3.2",
+        class: "block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500 text-base font-mono",
+        required: true %>
+    <p class="mt-1 text-sm text-gray-500">The exact model identifier used by the provider's API</p>
+  </div>
+
+  <!-- Active Checkbox -->
+  <div class="flex items-start">
+    <div class="flex items-center h-5">
+      <%= form.check_box :active,
+          class: "h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded cursor-pointer" %>
+    </div>
+    <div class="ml-3 text-sm">
+      <%= form.label :active, class: "font-medium text-gray-700 cursor-pointer" do %>
+        Active
+      <% end %>
+      <p class="text-gray-500">Make this model available for selection</p>
+    </div>
+  </div>
+
+  <!-- Is Default Checkbox -->
+  <div class="flex items-start">
+    <div class="flex items-center h-5">
+      <%= form.check_box :is_default,
+          class: "h-4 w-4 text-yellow-600 focus:ring-yellow-500 border-gray-300 rounded cursor-pointer" %>
+    </div>
+    <div class="ml-3 text-sm">
+      <%= form.label :is_default, class: "font-medium text-gray-700 cursor-pointer" do %>
+        Set as Default Model
+      <% end %>
+      <p class="text-gray-500">This model will be used for all LLM operations (credential extraction, certificate analysis, etc.)</p>
+    </div>
+  </div>
+
+  <!-- Form Actions -->
+  <div class="flex items-center justify-between pt-5 border-t border-gray-200">
+    <%= link_to "Cancel", admin_ai_models_path, class: "px-6 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors" %>
+    <%= form.submit class: "px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all shadow-md hover:shadow-lg cursor-pointer" %>
+  </div>
+<% end %>

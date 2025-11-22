@@ -1,4 +1,33 @@
 <div class="min-h-screen bg-gray-50 pt-20">
+  <!-- Pending Questions Alert -->
+  <% unanswered_count = SupportMessage.root_messages.left_joins(:replies).where(replies_support_messages: { id: nil }).count %>
+  <% if unanswered_count > 0 %>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      <div class="bg-gradient-to-r from-orange-50 to-red-50 border-l-4 border-orange-500 p-4 rounded-lg shadow-sm" data-controller="dismissible">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <svg class="h-6 w-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm font-medium text-orange-800">
+                You have <%= pluralize(unanswered_count, 'pending question') %> from users
+                <%= link_to "View Questions →", admin_support_messages_path(filter: 'unanswered'), class: "ml-2 font-semibold text-orange-900 hover:text-orange-700 underline" %>
+              </p>
+            </div>
+          </div>
+          <button data-action="click->dismissible#dismiss" class="flex-shrink-0 ml-4 text-orange-600 hover:text-orange-800">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
   <!-- Page Header -->
   <div class="bg-white border-b border-gray-200 py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

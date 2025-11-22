@@ -76,6 +76,11 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
+  # Configure Active Record encryption
+  config.active_record.encryption.primary_key = Rails.application.credentials.dig(:active_record_encryption, :primary_key)
+  config.active_record.encryption.deterministic_key = Rails.application.credentials.dig(:active_record_encryption, :deterministic_key)
+  config.active_record.encryption.key_derivation_salt = Rails.application.credentials.dig(:active_record_encryption, :key_derivation_salt)
+
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
 

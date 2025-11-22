@@ -85,7 +85,7 @@ module Account
       # Send email to admin about new support message
       admin_users = User.admins
       admin_users.each do |admin|
-        AdminMailer.new_support_message(admin, message).deliver_later
+        SendAdminNotificationJob.perform_later(admin.id, message.id)
       end
     end
   end

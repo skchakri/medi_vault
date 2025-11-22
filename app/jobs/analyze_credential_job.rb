@@ -3,7 +3,7 @@
 class AnalyzeCredentialJob < ApplicationJob
   queue_as :ai
 
-  retry_on StandardError, wait: :exponentially_longer, attempts: 3
+  retry_on StandardError, wait: ->(executions) { executions ** 2 }, attempts: 3
 
   def perform(credential_id)
     result = CertificateAnalysisTool.new.execute(credential_id: credential_id)

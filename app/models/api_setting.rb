@@ -2,7 +2,7 @@
 
 class ApiSetting < ApplicationRecord
   # Lockbox encryption for sensitive values
-  encrypts :encrypted_value, key: :lockbox_master_key
+  encrypts :encrypted_value
 
   validates :key, presence: true, uniqueness: true
 
@@ -39,11 +39,5 @@ class ApiSetting < ApplicationRecord
 
   def decrypted_value
     encrypted_value.presence || value
-  end
-
-  private
-
-  def lockbox_master_key
-    ENV['LOCKBOX_MASTER_KEY'] || raise('LOCKBOX_MASTER_KEY not set')
   end
 end

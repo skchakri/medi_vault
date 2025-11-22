@@ -54,8 +54,27 @@
                   </div>
                   <div>
                     <label for="settings_openai_model" class="block text-sm font-medium text-gray-700 mb-1">Default Model</label>
-                    <input type="text" name="settings[openai_model]" id="settings_openai_model" value="<%= @api_settings.find { |s| s.key == 'openai_model' }&.value %>" placeholder="gpt-4-turbo" class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500">
-                    <p class="mt-1 text-sm text-gray-500">Model to use for credential extraction (e.g., gpt-4-turbo, gpt-3.5-turbo)</p>
+                    <select name="settings[openai_model]" id="settings_openai_model" class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500">
+                      <%
+                        current_model = @api_settings.find { |s| s.key == 'openai_model' }&.value || 'gpt-4o'
+                        openai_models = [
+                          ['GPT-4o (Latest, Multimodal)', 'gpt-4o'],
+                          ['GPT-4o Mini (Fast & Cost-effective)', 'gpt-4o-mini'],
+                          ['GPT-4 Turbo (128K context)', 'gpt-4-turbo'],
+                          ['GPT-4 Turbo (With Vision)', 'gpt-4-turbo-2024-04-09'],
+                          ['GPT-4 (8K context)', 'gpt-4'],
+                          ['GPT-4 (32K context)', 'gpt-4-32k'],
+                          ['GPT-3.5 Turbo (Fast & Affordable)', 'gpt-3.5-turbo'],
+                          ['GPT-3.5 Turbo (16K context)', 'gpt-3.5-turbo-16k'],
+                          ['O1 Preview (Advanced Reasoning)', 'o1-preview'],
+                          ['O1 Mini (Fast Reasoning)', 'o1-mini']
+                        ]
+                      %>
+                      <% openai_models.each do |label, value| %>
+                        <option value="<%= value %>" <%= 'selected' if current_model == value %>><%= label %></option>
+                      <% end %>
+                    </select>
+                    <p class="mt-1 text-sm text-gray-500">Select the OpenAI model to use for credential extraction and analysis</p>
                   </div>
                 </div>
               </div>

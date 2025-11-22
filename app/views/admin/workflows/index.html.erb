@@ -1,0 +1,135 @@
+<% content_for :head do %>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/drawflow/dist/drawflow.min.css">
+  <style>
+    #drawflow {
+      width: 100%;
+      height: 1100px;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+      background: linear-gradient(180deg, #f9fafb 0%, #f2f4f7 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+    .drawflow .drawflow-node {
+      min-width: 240px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+      overflow: hidden;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.2s ease;
+    }
+    .drawflow .drawflow-node.ready {
+      border-color: #16a34a;
+      box-shadow: 0 15px 40px rgba(22,163,74,0.25);
+    }
+    .drawflow .drawflow-node.missing {
+      border-color: #ef4444;
+      box-shadow: 0 15px 40px rgba(239,68,68,0.25);
+    }
+    .drawflow .drawflow-node:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 34px rgba(0,0,0,0.12);
+    }
+    .drawflow .drawflow-node .title {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    .drawflow .drawflow-node .subtitle {
+      font-size: 12px;
+      color: #475467;
+    }
+    .drawflow .drawflow-node .badge {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+    .drawflow .drawflow-node .badge.ready {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+    .drawflow .drawflow-node .badge.missing {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecdd3;
+    }
+    .drawflow .drawflow-node .meta {
+      font-size: 11px;
+      color: #6b7280;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/drawflow/dist/drawflow.min.js"></script>
+<% end %>
+
+<!-- Break out of container constraints -->
+<div class="relative -mx-4 sm:-mx-6 lg:-mx-8">
+  <div class="px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-5 gap-6 items-start" data-controller="workflow-builder" data-workflow-builder-tools-value="<%= AiTools::REGISTRY.transform_values { |spec| { name: spec.name, description: spec.description, inputs: spec.inputs, outputs: spec.outputs } }.to_json %>" data-workflow-builder-workflow-value="<%= @workflows.first&.attributes&.slice('id', 'name', 'description', 'status', 'nodes', 'edges').to_json %>">
+  <div class="col-span-1 space-y-4">
+    <div class="bg-white shadow rounded-lg p-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold">Workflows</h2>
+        <%= button_to "New", admin_workflows_path, method: :post, params: { workflow: { name: "Untitled Workflow #{Time.current.to_i}", description: "", nodes: [], edges: [] } }, class: "text-sm text-purple-600 hover:underline" %>
+      </div>
+      <p class="text-sm text-gray-600 mt-1">Select a workflow to edit or create a new one.</p>
+      <ul class="divide-y divide-gray-100 mt-3">
+        <% @workflows.each do |workflow| %>
+          <li class="py-2">
+            <button type="button"
+                    class="text-left w-full hover:text-purple-600"
+                    data-action="click->workflow-builder#loadWorkflow"
+                    data-workflow-builder-workflow-param="<%= workflow.attributes.slice('id', 'name', 'description', 'status', 'nodes', 'edges').to_json %>">
+              <div class="flex items-center justify-between">
+                <span class="font-medium"><%= workflow.name %></span>
+                <span class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700"><%= workflow.status %></span>
+              </div>
+              <p class="text-xs text-gray-500 mt-1 truncate"><%= workflow.description.presence || 'No description' %></p>
+            </button>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div class="bg-white shadow rounded-lg p-4">
+      <h2 class="text-lg font-semibold">Tools</h2>
+      <p class="text-sm text-gray-600 mt-1">Click to add a tool node to the canvas.</p>
+      <div class="space-y-2 mt-3">
+        <% AiTools::REGISTRY.each do |key, spec| %>
+          <button type="button"
+                  class="w-full text-left border border-gray-200 rounded-md p-3 hover:border-purple-400"
+                  data-action="click->workflow-builder#addNode"
+                  data-workflow-builder-tool-param="<%= { key: key, name: spec.name, description: spec.description }.to_json %>">
+            <div class="font-medium"><%= spec.name %></div>
+            <p class="text-xs text-gray-500"><%= spec.description %></p>
+          </button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-span-4 space-y-4">
+    <div class="bg-white shadow rounded-lg p-4">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <input type="text" class="border rounded px-3 py-2 w-64" placeholder="Workflow name" data-workflow-builder-target="nameInput">
+          <input type="text" class="border rounded px-3 py-2 w-80 ml-2" placeholder="Description" data-workflow-builder-target="descriptionInput">
+        </div>
+        <div class="space-x-2">
+          <select class="border rounded px-2 py-2" data-workflow-builder-target="statusSelect">
+            <option value="draft">Draft</option>
+            <option value="active">Active</option>
+            <option value="archived">Archived</option>
+          </select>
+          <button class="bg-purple-600 text-white px-4 py-2 rounded" data-action="click->workflow-builder#save">Save</button>
+        </div>
+      </div>
+
+      <div id="drawflow" data-workflow-builder-target="canvas"></div>
+      <p class="text-xs text-gray-600 mt-2">Green nodes have all required inputs; red nodes need configuration. Drag connectors to link nodes.</p>
+    </div>
+  </div>
+</div>
+  </div>
+</div>

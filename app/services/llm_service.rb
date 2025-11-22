@@ -39,6 +39,11 @@ class LlmService < ApplicationService
   end
 
   def default_provider
+    # First check if there's a default AI model
+    default_ai_model = AiModel.default_model
+    return default_ai_model.provider.to_sym if default_ai_model
+
+    # Fall back to ApiSetting
     if ApiSetting.get('ollama_url').present?
       :ollama
     elsif ApiSetting.get('openai_api_key').present?
@@ -49,6 +54,11 @@ class LlmService < ApplicationService
   end
 
   def default_model
+    # First check if there's a default AI model
+    default_ai_model = AiModel.default_model
+    return default_ai_model.model_identifier if default_ai_model
+
+    # Fall back to ApiSetting
     case @provider
     when :openai
       ApiSetting.get('openai_model') || 'gpt-4o-mini'
@@ -107,12 +117,12 @@ class LlmService < ApplicationService
   def calculate_openai_cost(tokens, model)
     # Rough cost estimates in cents
     rate_per_1k = case model
-                  when /gpt-4o-mini/ then 0.015
-                  when /gpt-4o/ then 0.25
-                  when /gpt-4/ then 3.0
-                  when /gpt-3.5/ then 0.1
-                  else 0.01
-                  end
+    when /gpt-4o-mini/ then 0.015
+    when /gpt-4o/ then 0.25
+    when /gpt-4/ then 3.0
+    when /gpt-3.5/ then 0.1
+    else 0.01
+    end
 
     ((tokens / 1000.0) * rate_per_1k * 100).to_i
   end

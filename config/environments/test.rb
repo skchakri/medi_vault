@@ -42,6 +42,11 @@ Rails.application.configure do
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
+  # Configure Active Record encryption
+  config.active_record.encryption.primary_key = Rails.application.credentials.dig(:active_record_encryption, :primary_key)
+  config.active_record.encryption.deterministic_key = Rails.application.credentials.dig(:active_record_encryption, :deterministic_key)
+  config.active_record.encryption.key_derivation_salt = Rails.application.credentials.dig(:active_record_encryption, :key_derivation_salt)
+
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 

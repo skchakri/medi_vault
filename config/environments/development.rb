@@ -59,6 +59,11 @@ Rails.application.configure do
   # Append comments with runtime information tags to SQL queries in logs.
   config.active_record.query_log_tags_enabled = true
 
+  # Configure Active Record encryption
+  config.active_record.encryption.primary_key = Rails.application.credentials.dig(:active_record_encryption, :primary_key)
+  config.active_record.encryption.deterministic_key = Rails.application.credentials.dig(:active_record_encryption, :deterministic_key)
+  config.active_record.encryption.key_derivation_salt = Rails.application.credentials.dig(:active_record_encryption, :key_derivation_salt)
+
   # Highlight code that enqueued background job in logs.
   config.active_job.verbose_enqueue_logs = true
 

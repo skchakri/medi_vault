@@ -63,7 +63,7 @@ class CredentialExtractionService < ApplicationService
     # Use image_url format with PDF media type (OpenAI now supports PDFs this way)
     response = client.chat(
       parameters: {
-        model: "gpt-4o",
+        model: vision_model,
         messages: [
           {
             role: "user",
@@ -122,7 +122,7 @@ class CredentialExtractionService < ApplicationService
 
     response = client.chat(
       parameters: {
-        model: "gpt-4o",
+        model: vision_model,
         messages: [
           {
             role: "user",
@@ -219,5 +219,15 @@ class CredentialExtractionService < ApplicationService
     Date.parse(date_string.to_s)
   rescue ArgumentError
     nil
+  end
+
+  def vision_model
+    # Use default AI model if it's OpenAI, otherwise fall back to gpt-4o
+    default_ai_model = AiModel.default_model
+    if default_ai_model&.provider == "openai"
+      default_ai_model.model_identifier
+    else
+      "gpt-4o"
+    end
   end
 end
