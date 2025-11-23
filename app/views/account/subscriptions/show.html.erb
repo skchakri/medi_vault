@@ -30,9 +30,9 @@
         <div class="text-right">
           <% case @user.plan %>
             <% when "pro" %>
-              <div class="text-3xl font-bold text-cyan-600">$29</div>
+              <div class="text-3xl font-bold text-purple-600">$29</div>
             <% when "basic" %>
-              <div class="text-3xl font-bold text-cyan-600">$9</div>
+              <div class="text-3xl font-bold text-purple-600">$9</div>
             <% else %>
               <div class="text-3xl font-bold text-gray-600">Free</div>
           <% end %>
@@ -46,7 +46,7 @@
       <h2 class="text-xl font-semibold text-gray-900 mb-4">Choose Your Plan</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Free Plan -->
-        <div class="bg-white rounded-lg shadow overflow-hidden <%= 'ring-2 ring-cyan-500' if @user.plan == 'free' %>">
+        <div class="bg-white rounded-lg shadow overflow-hidden <%= 'ring-2 ring-purple-500' if @user.plan == 'free' %>">
           <div class="p-6">
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Free</h3>
             <div class="text-3xl font-bold text-gray-900 mb-4">
@@ -82,13 +82,13 @@
                 <%= form.submit "Switch to Free", class: "w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition cursor-pointer" %>
               <% end %>
             <% else %>
-              <button disabled class="w-full px-4 py-2 bg-cyan-600 text-white rounded-lg font-medium cursor-not-allowed">Current Plan</button>
+              <button disabled class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg font-medium cursor-not-allowed">Current Plan</button>
             <% end %>
           </div>
         </div>
 
         <!-- Basic Plan -->
-        <div class="bg-white rounded-lg shadow overflow-hidden <%= 'ring-2 ring-cyan-500' if @user.plan == 'basic' %>">
+        <div class="bg-white rounded-lg shadow overflow-hidden <%= 'ring-2 ring-purple-500' if @user.plan == 'basic' %>">
           <div class="p-6">
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Basic</h3>
             <div class="text-3xl font-bold text-gray-900 mb-1">
@@ -124,23 +124,23 @@
                 <%= form_with(url: account_checkout_path, method: :post, local: true) do |form| %>
                   <%= form.hidden_field :plan, value: 'basic' %>
                   <%= form.hidden_field :billing_period, value: 'monthly' %>
-                  <%= form.submit "Upgrade - $9/month", class: "w-full px-4 py-2 bg-cyan-600 text-white rounded-lg font-medium hover:bg-cyan-700 transition cursor-pointer" %>
+                  <%= form.submit "Upgrade - $9/month", class: "w-full px-4 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition cursor-pointer" %>
                 <% end %>
                 <%= form_with(url: account_checkout_path, method: :post, local: true) do |form| %>
                   <%= form.hidden_field :plan, value: 'basic' %>
                   <%= form.hidden_field :billing_period, value: 'yearly' %>
-                  <%= form.submit "Upgrade - $90/year", class: "w-full px-4 py-2 border border-cyan-600 text-cyan-600 rounded-lg font-medium hover:bg-cyan-50 transition cursor-pointer" %>
+                  <%= form.submit "Upgrade - $90/year", class: "w-full px-4 py-2 border border-purple-600 text-purple-600 rounded-lg font-medium hover:bg-purple-50 transition cursor-pointer" %>
                 <% end %>
               </div>
             <% else %>
-              <button disabled class="w-full px-4 py-2 bg-cyan-600 text-white rounded-lg font-medium cursor-not-allowed">Current Plan</button>
+              <button disabled class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg font-medium cursor-not-allowed">Current Plan</button>
             <% end %>
           </div>
         </div>
 
         <!-- Pro Plan -->
-        <div class="bg-white rounded-lg shadow overflow-hidden border-2 border-cyan-600 <%= 'ring-2 ring-cyan-500' if @user.plan == 'pro' %>">
-          <div class="bg-cyan-600 text-white px-6 py-3">
+        <div class="bg-white rounded-lg shadow overflow-hidden border-2 border-purple-600 <%= 'ring-2 ring-purple-500' if @user.plan == 'pro' %>">
+          <div class="bg-purple-600 text-white px-6 py-3">
             <p class="text-sm font-semibold">Most Popular</p>
           </div>
           <div class="p-6">
@@ -178,16 +178,16 @@
                 <%= form_with(url: account_checkout_path, method: :post, local: true) do |form| %>
                   <%= form.hidden_field :plan, value: 'pro' %>
                   <%= form.hidden_field :billing_period, value: 'monthly' %>
-                  <%= form.submit "Upgrade - $29/month", class: "w-full px-4 py-2 bg-cyan-600 text-white rounded-lg font-medium hover:bg-cyan-700 transition cursor-pointer" %>
+                  <%= form.submit "Upgrade - $29/month", class: "w-full px-4 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition cursor-pointer" %>
                 <% end %>
                 <%= form_with(url: account_checkout_path, method: :post, local: true) do |form| %>
                   <%= form.hidden_field :plan, value: 'pro' %>
                   <%= form.hidden_field :billing_period, value: 'yearly' %>
-                  <%= form.submit "Upgrade - $290/year", class: "w-full px-4 py-2 border border-cyan-600 text-cyan-600 rounded-lg font-medium hover:bg-cyan-50 transition cursor-pointer" %>
+                  <%= form.submit "Upgrade - $290/year", class: "w-full px-4 py-2 border border-purple-600 text-purple-600 rounded-lg font-medium hover:bg-purple-50 transition cursor-pointer" %>
                 <% end %>
               </div>
             <% else %>
-              <button disabled class="w-full px-4 py-2 bg-cyan-600 text-white rounded-lg font-medium cursor-not-allowed">Current Plan</button>
+              <button disabled class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg font-medium cursor-not-allowed">Current Plan</button>
             <% end %>
           </div>
         </div>

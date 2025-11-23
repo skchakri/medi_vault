@@ -24,8 +24,15 @@
   <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
     <div class="flex justify-between items-center h-14 sm:h-16">
       <div class="flex items-center flex-shrink-0">
-        <%= link_to root_path, class: "text-xl sm:text-2xl font-bold gradient-text whitespace-nowrap" do %>
-          mediVault
+        <%= link_to root_path, class: "flex items-center" do %>
+          <% theme = ThemeSetting.current %>
+          <% if theme.logo.attached? %>
+            <%= image_tag theme.logo, alt: "MediVault", class: "h-8 sm:h-10 w-auto" %>
+          <% else %>
+            <span class="text-xl sm:text-2xl font-bold gradient-text whitespace-nowrap">
+              mediVault
+            </span>
+          <% end %>
         <% end %>
       </div>
       <div class="hidden sm:flex sm:items-center sm:space-x-4">

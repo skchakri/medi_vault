@@ -6,9 +6,14 @@
         <!-- Logo -->
         <div class="flex-shrink-0 flex items-center">
           <%= link_to authenticated_root_path, class: "flex items-center" do %>
-            <span class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              MediVault
-            </span>
+            <% theme = ThemeSetting.current %>
+            <% if theme.logo.attached? %>
+              <%= image_tag theme.logo, alt: "MediVault", class: "h-10 w-auto" %>
+            <% else %>
+              <span class="text-2xl font-bold gradient-text">
+                MediVault
+              </span>
+            <% end %>
           <% end %>
         </div>
 
@@ -46,8 +51,6 @@
             <%= link_to "Credentials", credentials_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(credentials_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
 
             <%= link_to "Alerts", alerts_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(alerts_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
-
-            <%= link_to "Support", account_support_messages_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(account_support_messages_path) ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-700 hover:text-purple-600 hover:border-gray-300 border-b-2 border-transparent transition'}" %>
           <% end %>
         </div>
       </div>
@@ -152,8 +155,6 @@
           <%= link_to "Credentials", credentials_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(credentials_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
 
           <%= link_to "Alerts", alerts_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(alerts_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
-
-          <%= link_to "Support", account_support_messages_path, class: "block pl-3 pr-4 py-2 text-base font-medium #{current_page?(account_support_messages_path) ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-700' : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300 border-l-4 border-transparent'}" %>
         <% end %>
       </div>
     </div>

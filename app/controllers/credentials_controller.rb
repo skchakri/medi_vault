@@ -6,6 +6,18 @@ class CredentialsController < ApplicationController
   def index
     @credentials = current_user.credentials
 
+    # Apply status filter based on tab selection
+    case params[:status]
+    when 'active'
+      @credentials = @credentials.where(status: [:active, :pending])
+                                 .where("end_date > ? OR end_date IS NULL", 30.days.from_now)
+    when 'expiring_soon'
+      @credentials = @credentials.where("end_date <= ? AND end_date > ?", 30.days.from_now, Date.today)
+    when 'expired'
+      @credentials = @credentials.where("end_date <= ?", Date.today)
+    # 'all' or no status parameter shows all credentials
+    end
+
     # Load all available tags for filtering
     @available_tags = Tag.default_tags.or(Tag.user_tags(current_user)).alphabetical
 
