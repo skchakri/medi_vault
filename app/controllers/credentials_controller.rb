@@ -134,6 +134,36 @@ class CredentialsController < ApplicationController
     redirect_to @credential
   end
 
+  def bulk_share
+    credential_ids = params[:credential_ids]&.reject(&:blank?)
+
+    if credential_ids.blank?
+      flash[:alert] = "Please select at least one credential to share"
+      redirect_to credentials_path and return
+    end
+
+    @credentials = current_user.credentials.where(id: credential_ids)
+
+    if @credentials.empty?
+      flash[:alert] = "No valid credentials selected"
+      redirect_to credentials_path and return
+    end
+
+    recipient_email = params[:recipient_email]
+    message = params[:message]
+
+    # Send credentials via email using a background job
+    CredentialBulkShareJob.perform_later(
+      credential_ids: @credentials.pluck(:id),
+      recipient_email: recipient_email,
+      sender_id: current_user.id,
+      message: message
+    )
+
+    flash[:notice] = "Credentials are being prepared and will be sent to #{recipient_email} shortly."
+    redirect_to credentials_path
+  end
+
   private
 
   def set_credential

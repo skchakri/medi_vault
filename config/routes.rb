@@ -34,6 +34,7 @@ Rails.application.routes.draw do
       collection do
         get :bulk_new
         post :bulk_create
+        post :bulk_share
       end
       member do
         post :extract # Re-trigger AI extraction

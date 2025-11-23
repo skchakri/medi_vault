@@ -18,10 +18,10 @@ class MainActivity : AppCompatActivity() {
     companion object {
         // For Android Emulator (10.0.2.2 is the special IP for host machine's localhost)
         // NOTE: localhost won't work on Android - use 10.0.2.2 instead
-        // const val BASE_URL = "http://10.0.2.2:9000"
+        const val BASE_URL = "http://10.0.2.2:3000"
 
         // For physical device on same WiFi network, use your computer's IP:
-        const val BASE_URL = "http://192.168.1.144:9000"
+        //const val BASE_URL = "http://192.168.1.144:9000"
 
         // For production:
         // const val BASE_URL = "https://your-production-url.com"

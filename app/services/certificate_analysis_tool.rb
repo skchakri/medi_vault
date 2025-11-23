@@ -32,6 +32,8 @@ class CertificateAnalysisSchema < RubyLLM::Schema
   end
 
   array :warnings, of: :string, required: false, description: "Important warnings found on the document"
+
+  array :suggested_tags, of: :string, required: false, description: "Relevant tags/categories for this credential (e.g., 'Medical License', 'Nursing', 'CPR', 'Board Certification')"
 end
 
 class CertificateAnalysisTool < RubyLLM::Tool
@@ -178,6 +180,9 @@ class CertificateAnalysisTool < RubyLLM::Tool
 
       Provide a concise summary of the certificate if possible and include any warnings (e.g., expired, missing signatures).
 
+      Also suggest 2-5 relevant tags/categories for this credential based on its type and content.
+      Examples: "Medical License", "Nursing", "CPR Certification", "Board Certification", "DEA License", "BLS", "ACLS", "Specialty Certification"
+
       Return your response as JSON with this structure:
       {
         "title": "string - Official credential name from the certificate",
@@ -186,7 +191,8 @@ class CertificateAnalysisTool < RubyLLM::Tool
         "issuing_organization": "string or null",
         "credential_number": "string or null",
         "document_summary": "string or null",
-        "warnings": ["array of warning strings"]
+        "warnings": ["array of warning strings"],
+        "suggested_tags": ["array of 2-5 relevant tag strings"]
       }
     PROMPT
   end
@@ -208,6 +214,9 @@ class CertificateAnalysisTool < RubyLLM::Tool
 
       Provide a concise summary of the certificate if possible and include any warnings (e.g., expired, missing signatures).
 
+      Also suggest 2-5 relevant tags/categories for this credential based on its type and content.
+      Examples: "Medical License", "Nursing", "CPR Certification", "Board Certification", "DEA License", "BLS", "ACLS", "Specialty Certification"
+
       Return your response as JSON with this structure:
       {
         "title": "string - Official credential name from the certificate",
@@ -216,7 +225,8 @@ class CertificateAnalysisTool < RubyLLM::Tool
         "issuing_organization": "string or null",
         "credential_number": "string or null",
         "document_summary": "string or null",
-        "warnings": ["array of warning strings"]
+        "warnings": ["array of warning strings"],
+        "suggested_tags": ["array of 2-5 relevant tag strings"]
       }
     PROMPT
   end
@@ -240,6 +250,31 @@ class CertificateAnalysisTool < RubyLLM::Tool
       ai_processed: true,
       ai_processed_at: Time.current
     )
+
+    # Apply suggested tags
+    apply_suggested_tags(credential, data[:suggested_tags])
+  end
+
+  def apply_suggested_tags(credential, suggested_tags)
+    return if suggested_tags.blank?
+
+    # Normalize tag names and create/find tags
+    tags_to_apply = suggested_tags.map do |tag_name|
+      normalized_name = tag_name.to_s.strip.downcase
+      next if normalized_name.blank?
+
+      # Find or create the tag
+      Tag.find_or_create_by!(name: normalized_name) do |tag|
+        tag.color = Tag::TAG_COLORS.sample # Assign a random color
+        tag.is_default = false
+        tag.user_id = credential.user_id
+      end
+    end.compact
+
+    # Associate tags with credential (avoiding duplicates)
+    tags_to_apply.each do |tag|
+      credential.tags << tag unless credential.tags.include?(tag)
+    end
   end
 
   def normalize_response(payload)

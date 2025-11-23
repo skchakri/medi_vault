@@ -92,6 +92,19 @@ class Credential < ApplicationRecord
     end
   end
 
+  # AI extracted data accessors
+  def issuing_organization
+    ai_extracted_json&.dig("issuing_organization") || ai_extracted_json&.dig("issued_organization")
+  end
+
+  def credential_number
+    ai_extracted_json&.dig("credential_number")
+  end
+
+  def document_summary
+    ai_extracted_json&.dig("document_summary")
+  end
+
   private
 
   def user_within_credential_limit
@@ -114,10 +127,11 @@ class Credential < ApplicationRecord
   def create_default_alerts
     return unless end_date.present?
 
-    # Get active alert types applicable to user's plan
+    # Get active alert types applicable to user's plan (limit to 3 default alerts)
     applicable_alert_types = AlertType.active
       .where("user_plans IS NULL OR user_plans @> ?", [user.plan].to_json)
       .order(priority: :asc)
+      .limit(3)
 
     applicable_alert_types.each do |alert_type|
       alert_date = end_date - alert_type.offset_days.days
