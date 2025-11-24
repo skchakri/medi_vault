@@ -1,10 +1,27 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["checkbox", "toolbar", "count", "modal", "credentialIds"]
+  static targets = ["checkbox", "toolbar", "count", "modal", "credentialIds", "selectAll"]
 
   connect() {
     this.selectedIds = new Set()
+  }
+
+  toggleAll(event) {
+    const isChecked = event.target.checked
+
+    this.checkboxTargets.forEach(checkbox => {
+      checkbox.checked = isChecked
+      const credentialId = checkbox.dataset.credentialId
+
+      if (isChecked) {
+        this.selectedIds.add(credentialId)
+      } else {
+        this.selectedIds.delete(credentialId)
+      }
+    })
+
+    this.updateUI()
   }
 
   toggleCredential(event) {
@@ -16,7 +33,19 @@ export default class extends Controller {
       this.selectedIds.delete(credentialId)
     }
 
+    this.updateSelectAllCheckbox()
     this.updateUI()
+  }
+
+  updateSelectAllCheckbox() {
+    if (this.hasSelectAllTarget) {
+      const allChecked = this.checkboxTargets.length > 0 &&
+                        this.checkboxTargets.every(cb => cb.checked)
+      const someChecked = this.checkboxTargets.some(cb => cb.checked)
+
+      this.selectAllTarget.checked = allChecked
+      this.selectAllTarget.indeterminate = someChecked && !allChecked
+    }
   }
 
   clearSelection() {
@@ -24,6 +53,10 @@ export default class extends Controller {
     this.checkboxTargets.forEach(checkbox => {
       checkbox.checked = false
     })
+    if (this.hasSelectAllTarget) {
+      this.selectAllTarget.checked = false
+      this.selectAllTarget.indeterminate = false
+    }
     this.updateUI()
   }
 
@@ -36,6 +69,8 @@ export default class extends Controller {
     } else {
       this.toolbarTarget.classList.add("hidden")
     }
+
+    this.updateSelectAllCheckbox()
   }
 
   showShareModal() {

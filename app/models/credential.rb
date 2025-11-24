@@ -25,13 +25,13 @@ class Credential < ApplicationRecord
   validate :end_date_after_start_date
 
   # Callbacks
-  after_create :schedule_ai_extraction
+  after_commit :schedule_ai_extraction, on: :create
   after_create :create_default_alerts
   after_save :update_status_based_on_expiration
   before_destroy :decrement_user_counter
 
   # Scopes
-  scope :active, -> { where(status: [:active, :expiring_soon]) }
+  scope :active, -> { where(status: [ :active, :expiring_soon ]) }
   scope :expiring_soon, -> { where("end_date <= ? AND end_date > ?", 30.days.from_now, Date.today) }
   scope :expired, -> { where("end_date <= ?", Date.today) }
   scope :by_expiration, -> { order(end_date: :asc) }
@@ -80,11 +80,11 @@ class Credential < ApplicationRecord
 
   # Tag helper methods
   def tag_list
-    tags.pluck(:name).join(', ')
+    tags.pluck(:name).join(", ")
   end
 
   def tag_list=(names)
-    tag_names = names.to_s.split(',').map(&:strip).reject(&:blank?)
+    tag_names = names.to_s.split(",").map(&:strip).reject(&:blank?)
     self.tags = tag_names.map do |name|
       Tag.find_or_initialize_by(name: name.downcase) do |tag|
         tag.user = self.user unless Tag.exists?(name: name.downcase, is_default: true)
@@ -121,7 +121,10 @@ class Credential < ApplicationRecord
   end
 
   def schedule_ai_extraction
-    AnalyzeCredentialJob.perform_later(id) if file.attached?
+    return unless file.attached?
+
+    Rails.logger.info "Scheduling AI extraction for credential ##{id}"
+    AnalyzeCredentialJob.perform_later(id)
   end
 
   def create_default_alerts
@@ -129,7 +132,7 @@ class Credential < ApplicationRecord
 
     # Get active alert types applicable to user's plan (limit to 3 default alerts)
     applicable_alert_types = AlertType.active
-      .where("user_plans IS NULL OR user_plans @> ?", [user.plan].to_json)
+      .where("user_plans IS NULL OR user_plans @> ?", [ user.plan ].to_json)
       .order(priority: :asc)
       .limit(3)
 
@@ -151,11 +154,11 @@ class Credential < ApplicationRecord
 
     new_status = if expired?
                    :expired
-                 elsif expiring_soon?
+    elsif expiring_soon?
                    :expiring_soon
-                 else
+    else
                    :active
-                 end
+    end
 
     update_column(:status, new_status) if status != new_status
   end

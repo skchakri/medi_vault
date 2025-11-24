@@ -57,6 +57,8 @@ gem "dotenv-rails", "~> 3.0"
 # PDF Processing
 gem "pdf-reader", "~> 2.12"
 gem "prawn", "~> 2.5"
+gem "prawn-table", "~> 0.2"
+gem "combine_pdf", "~> 1.0"
 
 # Phone Number Validation
 gem "phonelib", "~> 0.8"
