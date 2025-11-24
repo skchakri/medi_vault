@@ -33,6 +33,7 @@ Rails.application.routes.draw do
     resources :credentials do
       collection do
         get :bulk_new
+        get :bulk_create # Handle page reloads
         post :bulk_create
         post :bulk_share
       end

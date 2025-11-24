@@ -78,6 +78,11 @@ class CredentialsController < ApplicationController
   end
 
   def bulk_create
+    # Handle page reloads (GET requests)
+    if request.get?
+      redirect_to bulk_new_credentials_path and return
+    end
+
     files = params[:files] || []
 
     if files.empty?
