@@ -253,6 +253,9 @@ class CertificateAnalysisTool < RubyLLM::Tool
 
     # Apply suggested tags
     apply_suggested_tags(credential, data[:suggested_tags])
+
+    # Create default alerts after extraction and tagging
+    create_default_alerts_after_extraction(credential)
   end
 
   def apply_suggested_tags(credential, suggested_tags)
@@ -323,5 +326,34 @@ class CertificateAnalysisTool < RubyLLM::Tool
   rescue => e
     Rails.logger.error "Unexpected error extracting PDF text for credential ##{credential.id}: #{e.message}"
     raise "Error processing PDF file: #{e.message}"
+  end
+
+  def create_default_alerts_after_extraction(credential)
+    # Reload to get the updated end_date and tags
+    credential.reload
+
+    # Only create alerts if end_date is present and no alerts exist yet
+    return unless credential.end_date.present?
+    return if credential.alerts.any?
+
+    # Define default alert offsets (in days before expiration)
+    default_alert_offsets = [ 30, 7, 1 ] # 1 month, 1 week, 1 day before
+
+    default_alert_offsets.each do |offset_days|
+      alert_date = credential.end_date - offset_days.days
+
+      # Skip if alert date is in the past
+      next if alert_date < Date.today
+
+      # Create the alert
+      credential.alerts.create(
+        offset_days: offset_days,
+        alert_date: alert_date,
+        message: "Your #{credential.title} expires in #{offset_days} day#{offset_days != 1 ? 's' : ''}"
+      )
+    rescue => e
+      Rails.logger.error "Failed to create default alert for credential ##{credential.id} with offset #{offset_days}: #{e.message}"
+      # Continue with other alerts even if one fails
+    end
   end
 end

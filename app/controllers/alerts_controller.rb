@@ -26,7 +26,7 @@ class AlertsController < ApplicationController
     end
 
     # Handle multiple offset_days (checkboxes)
-    offset_days_array = params[:offset_days]&.reject(&:blank?)
+    offset_days_array = Array(params[:offset_days]).reject(&:blank?)
 
     if offset_days_array.present?
       created_count = 0

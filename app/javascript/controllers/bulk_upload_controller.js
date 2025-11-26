@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="bulk-upload"
 export default class extends Controller {
-  static targets = ["dropzone", "input", "fileList", "fileCount", "submitButton", "clearButton"]
+  static targets = ["dropzone", "input", "cameraInput", "fileList", "fileCount", "submitButton", "clearButton"]
 
   connect() {
     console.log("Bulk upload controller connected")
@@ -34,6 +34,25 @@ export default class extends Controller {
       console.error("Error clicking file input:", error)
       // Fallback: try focusing the input
       this.inputTarget.focus()
+    }
+  }
+
+  openCamera(event) {
+    console.log("Opening camera...", event.type)
+
+    // Trigger the camera input which has the capture attribute
+    try {
+      if (this.hasCameraInputTarget) {
+        this.cameraInputTarget.click()
+        console.log("Camera input clicked successfully")
+      } else {
+        console.warn("Camera input not found, falling back to regular file input")
+        this.inputTarget.click()
+      }
+    } catch (error) {
+      console.error("Error clicking camera input:", error)
+      // Fallback to regular file input
+      this.inputTarget.click()
     }
   }
 
