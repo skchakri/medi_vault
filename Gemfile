@@ -43,7 +43,7 @@ gem "ruby_llm", "~> 1.8"
 gem "rack-attack", "~> 6.7"
 
 # SMS
-gem "twilio-ruby", "~> 6.9"
+gem "twilio-ruby", "~> 7.8"
 
 # Payments
 gem "stripe", "~> 10.0"
